@@ -16,8 +16,8 @@ speed_light = 299792458
 planewave_freq = 10e6
 planewave_length = speed_light/planewave_freq
 
-incident_angle = 40 #degrees
-incident_cart = np.array([np.cos(incident_angle), np.sin(incident_angle)])
+incident_angle = 45 #degrees
+incident_cart = np.array([np.cos(np.pi/180*incident_angle), np.sin(np.pi/180*incident_angle)])
 
 # Wave vector
 k = 2*np.pi/planewave_length*incident_cart
