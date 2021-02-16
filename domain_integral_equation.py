@@ -7,6 +7,7 @@ Created on Mon Feb 15 14:10:17 2021
 """
 import numpy as np
 from scipy.special import hankel1
+from scipy.spatial.distance import pdist, squareform
 from helpers.create_incident_wave import create_planewave
 
 def domain_integral_equation(simulation_size, step_size, wavelength, input_angle, relative_permittivity, farfield_samples=0):
@@ -68,18 +69,20 @@ def domain_integral_equation(simulation_size, step_size, wavelength, input_angle
     Delta_epsilon = np.matrix.flatten(relative_permittivity) - epsilon_B
     
     # Greens function matrix
-    # TODO: Find a way to optimize this as this part most likely takes the most time
-    # TODO: Find out if this part indeed takes the most time
     G = np.zeros((simulation_size[0]*simulation_size[1],simulation_size[0]*simulation_size[1]), complex)
+    
+    # Create vector with all locations in the plane
+    r = np.zeros((simulation_size[0]*simulation_size[1],2))
     for x in range(simulation_size[0]):
         for y in range(simulation_size[1]):
-            r = np.array([x,y]) # Evaluating point
-            for x_prime in range(simulation_size[0]):
-                for y_prime in range(simulation_size[1]):
-                    r_prime = np.array([x_prime, y_prime]) # Observation point
-                    varrho = np.linalg.norm(r - r_prime) # Length between evaluating point and observation point
-                    if varrho != 0:
-                        G[r[0]*simulation_size[1]+r[1]][r_prime[0]*simulation_size[1]+r_prime[1]] = 1j/4*hankel1(0,k_rho*varrho)
+            r[x*simulation_size[0]+y] = np.array([x,y])
+    
+    # Calculate distance between all points in the plane
+    varrho = squareform(pdist(r, 'euclidean'))
+    # Calculate G matrix
+    G = 1j/4*hankel1(0,k_rho*varrho)
+    # Set diagonal of G matrix to 0
+    np.fill_diagonal(G, 0)
         
     # Total E field (vector)
     E_r = np.matmul(np.linalg.inv(np.identity(simulation_size[0]*simulation_size[1]) - np.matmul(G, np.diag(Delta_epsilon))*V_mesh*np.square(k_0) - M*np.square(k_0)*np.diag(Delta_epsilon)), E_incident)
