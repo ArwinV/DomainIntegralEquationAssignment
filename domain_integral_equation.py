@@ -59,7 +59,7 @@ def domain_integral_equation(simulation_size, step_size, wavelength, input_angle
     # Volume of each mesh part (constant for all squares of the mesh)
     V_mesh = np.square(step_size)
     # Self contribution to the electric field
-    R_eff = np.sqrt(V_mesh/np.pi)
+    R_eff = np.sqrt(V_mesh/np.pi) #Effective radius
     beta = 1 # No coupling between TE and TM polarizations
     gamma = R_eff/k_rho*hankel1(1, k_rho*R_eff) + 2j/(np.pi*np.square(k_rho))
     M = 1j*np.pi/2*beta*gamma

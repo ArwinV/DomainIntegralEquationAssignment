@@ -26,7 +26,7 @@ show_plane(epsilon, step_size)
 # Define input wave properties
 frequency = 1e9
 wavelength = speed_of_light/frequency
-input_angle = 80*np.pi/180
+input_angle = 120*np.pi/180
 E_field = domain_integral_equation(simulation_size, step_size, wavelength, input_angle, epsilon)
 # Show the calculated E field
 show_plane(np.absolute(E_field), step_size)
