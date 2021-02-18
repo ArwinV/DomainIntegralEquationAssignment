@@ -46,11 +46,11 @@ def create_planewave(planesize, grid_distance, E_0, wavelength, incident_angle, 
     k_B = 2*np.pi/wavelength*np.sqrt(epsilon_B)*incident_cart
     
     # Loop over all coords in the plane and determine the amplitude of the
-    # electric field
+    # electric field in it's respective direction
     E = np.zeros((xsamples,ysamples), complex)
     for x in range(xsamples):
         for y in range(ysamples):
             # Current coordinate
             rho = np.array([x,y])*grid_distance
-            E[x][y] = E_0*np.exp(-1j*np.dot(k_B, rho))
+            E[x][y] = E_0*np.exp(-1j*np.dot(k_B, rho)) # TM mode E-field
     return E
