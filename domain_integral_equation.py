@@ -3,7 +3,7 @@
 """
 Created on Mon Feb 15 14:10:17 2021
 
-@author: Arwin
+@author: Jules Hilkens, Wendy Prins and Arwin Verhoeven
 """
 import numpy as np
 from scipy.special import hankel1
