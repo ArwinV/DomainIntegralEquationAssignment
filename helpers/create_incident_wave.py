@@ -23,7 +23,7 @@ def create_planewave(planesize, grid_distance, E_0, wavelength, incident_angle, 
         Amplitude of the plane wave.
     wavelength: float
         Wavelength of the plane wave.
-    incident_angle : int
+    incident_angle : float
         Angle in radians of the incoming wave. The angle is defined as the
         amount of radian from the horizontal axis in clockwise direction.
     epsilon_B : float, optional
@@ -36,9 +36,7 @@ def create_planewave(planesize, grid_distance, E_0, wavelength, incident_angle, 
 
     """
     xsamples = planesize[0]
-    xsize = xsamples*grid_distance
     ysamples = planesize[1]
-    ysize = ysamples*grid_distance
     
     # Determine components of the wave vector in x and y directions
     incident_cart = np.array([np.cos(incident_angle), np.sin(incident_angle)])
@@ -52,5 +50,5 @@ def create_planewave(planesize, grid_distance, E_0, wavelength, incident_angle, 
         for y in range(ysamples):
             # Current coordinate
             rho = np.array([x,y])*grid_distance
-            E[x][y] = E_0*np.exp(-1j*np.dot(k_B, rho)) # TM mode E-field
+            E[y][x] = E_0*np.exp(1j*np.dot(k_B, rho)) # TM mode E-field
     return E
