@@ -7,7 +7,7 @@ Created on Mon Feb 15 10:41:14 2021
 """
 import matplotlib.pyplot as plt
 
-def show_plane(plane, grid_distance):
+def show_plane(plane, grid_distance, title=""):
     """
     Plot the 2D plane
 
@@ -30,4 +30,5 @@ def show_plane(plane, grid_distance):
     plt.imshow(plane.T, interpolation='none', extent=[0,plane.shape[0]*grid_distance,0,plane.shape[1]*grid_distance], aspect=1)
     plt.xlabel("X [m]")
     plt.ylabel("Y [m]")
+    plt.title(title)
     plt.grid(b=True)
