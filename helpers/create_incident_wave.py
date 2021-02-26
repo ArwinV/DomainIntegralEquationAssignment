@@ -25,7 +25,7 @@ def create_planewave(planesize, grid_distance, E_0, wavelength, incident_angle, 
         Wavelength of the plane wave.
     incident_angle : float
         Angle in radians of the incoming wave. The angle is defined as the
-        amount of radian from the horizontal axis in clockwise direction.
+        amount of radian from the vertical axis in counter-clockwise direction.
     epsilon_B : float, optional
         Relative permittivity of the background. The default is 1.
 
