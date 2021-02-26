@@ -50,5 +50,5 @@ def create_planewave(planesize, grid_distance, E_0, wavelength, incident_angle, 
         for y in range(ysamples):
             # Current coordinate
             rho = np.array([x,y])*grid_distance
-            E[y][x] = E_0*np.exp(1j*np.dot(k_B, rho)) # TM mode E-field
+            E[y][x] = E_0*np.exp(1j*np.dot(k_B, rho) + 1j*np.pi) # TM mode E-field
     return E
