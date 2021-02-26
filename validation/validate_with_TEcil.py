@@ -10,7 +10,7 @@ from scipy.constants import speed_of_light
 from helpers.create_testobject import plane_with_circle, plane_with_guide
 from helpers.visualize import show_plane
 from domain_integral_equation import domain_integral_equation
-
+from helpers.create_incident_wave import create_planewave
 from validation.TEcil import Analytical_2D_TE
 
 # Create epsilon plane
@@ -23,7 +23,7 @@ circle_permittivity = 20 #relative
 epsilon = plane_with_circle(simulation_size, step_size, circle_diameter, circle_permittivity)
 
 # Show plane
-show_plane(epsilon, step_size)
+show_plane(epsilon, step_size, title="Plane on which the field is incident")
 
 # Define input wave properties
 frequency = 1e9
@@ -43,7 +43,7 @@ simparams = {
 E_field = domain_integral_equation(simparams)
 
 # Show the calculated E field
-show_plane(np.absolute(E_field), step_size)
+show_plane(np.absolute(E_field), step_size, title="E field calculated with algorithm")
 
 # TEcil expects different simparams, so create new dictionary
 xmin = -simulation_size[0]*step_size/2
@@ -65,10 +65,19 @@ simparams = {
 _, _, E_fieldval, E_inval = Analytical_2D_TE(simparams)
 
 # Show the validation E field
-show_plane(np.absolute(E_fieldval), step_size)
+show_plane(np.absolute(E_fieldval), step_size, title="E field of analytical solution")
 
 # Calculate difference between implementation and validation
 E_error = np.absolute(E_field - E_fieldval)
 
 # Plot the error
-show_plane(E_error, step_size)
+show_plane(E_error, step_size, title="Error between analytical solution and algorithm")
+
+# Plot the incident plane waves
+show_plane(np.real(E_inval), step_size, title="Incident field (analytical)")
+
+mu0 = np.pi*4e-7
+epsilon0 = 8.854187812813e-12
+E_0 = np.sqrt(mu0/epsilon0) # Amplitude of incident wave
+E_incident = create_planewave(simulation_size, step_size, E_0, wavelength, input_angle)
+show_plane(np.real(E_incident), step_size, title="Incident field (algorithm)")
