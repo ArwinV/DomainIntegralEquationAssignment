@@ -68,8 +68,6 @@ def domain_integral_equation(simparams, farfield_samples=0):
     
     
     # Incident field
-    # TODO: Is incident field also dependent on the relative permittivity 
-    # array?
     mu0 = np.pi*4e-7
     epsilon0 = 8.854187812813e-12
     E_0 = np.sqrt(mu0/epsilon0) # Amplitude of incident wave
