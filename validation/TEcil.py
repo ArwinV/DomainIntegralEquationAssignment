@@ -134,15 +134,7 @@ def Analytical_2D_TE(simparams):
      
     #Hix = np.cos(phi)*Hirho-np.sin(phi)*Hiphi    #*double(rho>a);
     #%Hiy = np.sin(phi)*Hirho+np.cos(phi)*Hiphi    #*double(rho>a);
-   
-#--------------------------Compute Hz & Hiz------------------------------------
-    Ez = np.zeros(len(rho))
-    Eiz = Ez
-    for i in range(0,2*nmax+1):
-        n = i-nmax
-        Ez = Ez + 1j**(-n)* ( (rho<=a)*A[i]*jv(n,rho*k0*math.sqrt(epsr)) \
-        + (rho>a)*(E0*jv(n,rho*k0) + B[i]*hankel2(n,rho*k0)) )*np.exp(1j*n*(phi-phi_i))
-        Eiz = Eiz + (1j)**(-n)*E0*jv(n,rho*k0)*np.exp(1j*n*(phi-phi_i))   
+    
 #--------------------------Compute Hz & Hiz------------------------------------
     Ez = np.zeros(len(rho))
     Eiz = Ez
