@@ -1,0 +1,74 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Feb 26 14:47:14 2021
+
+@author: Arwin
+"""
+
+import numpy as np
+from scipy.constants import speed_of_light
+from helpers.create_testobject import plane_with_circle, plane_with_guide
+from helpers.visualize import show_plane
+from domain_integral_equation import domain_integral_equation
+
+from validation.TEcil import Analytical_2D_TE
+
+# Create epsilon plane
+simulation_size = (50,50)
+
+# Circle in middle
+step_size = 0.05  #meters
+circle_diameter = 0.7 #meters
+circle_permittivity = 20 #relative
+epsilon = plane_with_circle(simulation_size, step_size, circle_diameter, circle_permittivity)
+
+# Show plane
+show_plane(epsilon, step_size)
+
+# Define input wave properties
+frequency = 1e9
+wavelength = speed_of_light/frequency
+input_angle = 120*np.pi/180
+
+# Store necessary variables into dictionary for E-field computation
+simparams = {
+    'simulation_size': simulation_size,
+    'step_size': step_size,
+    'wavelength': wavelength,
+    'input_angle': input_angle,
+    'relative_permittivity': epsilon
+    }
+
+# Compute E-field using domain_integral_equation
+E_field = domain_integral_equation(simparams)
+
+# Show the calculated E field
+show_plane(np.absolute(E_field), step_size)
+
+# TEcil expects different simparams, so create new dictionary
+xmin = -simulation_size[0]*step_size/2
+xmax = simulation_size[0]*step_size/2
+ymin = -simulation_size[1]*step_size/2
+ymax = simulation_size[1]*step_size/2
+xpoints,ypoints = np.meshgrid(np.linspace(xmin, xmax, simulation_size[0]), np.linspace(ymin, ymax, simulation_size[1]))
+simparams = {
+    'frequency': frequency,
+    'radius': circle_diameter/2,
+    'epsilon_r': circle_permittivity,
+    'incident_angle': input_angle,
+    'modes': 50, #used in jupyter notebook example
+    'evaluation_points_x': xpoints,
+    'evaluation_points_y': ypoints
+    }
+
+# Compute E-field using TEcil
+_, _, E_fieldval, E_inval = Analytical_2D_TE(simparams)
+
+# Show the validation E field
+show_plane(np.absolute(E_fieldval), step_size)
+
+# Calculate difference between implementation and validation
+E_error = np.absolute(E_field - E_fieldval)
+
+# Plot the error
+show_plane(E_error, step_size)
