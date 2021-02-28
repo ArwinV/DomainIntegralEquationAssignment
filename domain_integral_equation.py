@@ -8,6 +8,7 @@ Created on Mon Feb 15 14:10:17 2021
 import numpy as np
 from scipy.special import hankel1
 from scipy.spatial.distance import pdist, squareform
+from scipy.constants import epsilon_0, mu_0
 from helpers.create_incident_wave import create_planewave
 
 def domain_integral_equation(simparams, farfield_samples=0):
@@ -64,8 +65,6 @@ def domain_integral_equation(simparams, farfield_samples=0):
     epsilon_B = 1
     
     # Incident field
-    mu_0 = np.pi*4e-7
-    epsilon_0 = 8.854187812813e-12
     E_0 = np.sqrt(mu_0/epsilon_0) # Amplitude of incident wave
     k_0 = 2*np.pi/wavelength
     E_incident = np.matrix.flatten(create_planewave(simulation_size, step_size, E_0, wavelength, input_angle), 'C')
