@@ -61,18 +61,14 @@ def domain_integral_equation(simparams, farfield_samples=0):
             raise Exception("Error, number of y-coordinates in relative permittivity matrix incorrect")
             
     # Relative permittivity of background
-    # TODO: Can we just assume this is vacuum or should we take the minimal
-    # value of the relative permittivity matrix or something? Or should this
-    # be derived from the wavelength?
     epsilon_B = 1
     
-    
     # Incident field
-    mu0 = np.pi*4e-7
-    epsilon0 = 8.854187812813e-12
-    E_0 = np.sqrt(mu0/epsilon0) # Amplitude of incident wave
+    mu_0 = np.pi*4e-7
+    epsilon_0 = 8.854187812813e-12
+    E_0 = np.sqrt(mu_0/epsilon_0) # Amplitude of incident wave
     k_0 = 2*np.pi/wavelength
-    E_incident = np.matrix.flatten(create_planewave(simulation_size, step_size, E_0, wavelength, input_angle))
+    E_incident = np.matrix.flatten(create_planewave(simulation_size, step_size, E_0, wavelength, input_angle), 'C')
     # Wave number of incident field
     k_rho = 2*np.pi/wavelength*np.sqrt(epsilon_B)
     # Volume of each mesh part (constant for all squares of the mesh)
@@ -95,9 +91,8 @@ def domain_integral_equation(simparams, farfield_samples=0):
    
     for x in range(simulation_size[0]):
         for y in range(simulation_size[1]):
-            r[x*simulation_size[1]+y] = np.array([x,y])
+            r[x*simulation_size[1]+y] = np.array([x,y])*step_size
 
-    
     # Calculate distance between all points in the plane
     varrho = squareform(pdist(r, 'euclidean'))
     # Calculate G matrix
@@ -106,9 +101,9 @@ def domain_integral_equation(simparams, farfield_samples=0):
     np.fill_diagonal(G, 0)
         
     # Total E field (vector)
-    E_r = np.matmul(np.linalg.inv(np.identity(simulation_size[0]*simulation_size[1]) - np.matmul(G, np.diag(Delta_epsilon))*V_mesh*np.square(k_0) - M*np.square(k_0)*np.diag(Delta_epsilon)), E_incident)
+    E_r = np.matmul(np.linalg.inv(np.identity(simulation_size[0]*simulation_size[1]) - np.matmul(G.T, np.diag(Delta_epsilon))*V_mesh*np.square(k_0) - M*np.square(k_0)*np.diag(Delta_epsilon)), E_incident)
     # Reshape E field to be a 2d matrix
-    E_field = np.reshape(E_r, simulation_size)
+    E_field = np.reshape(E_r, simulation_size, order='C')
     
     # Calculate farfield samples if requested
     if (farfield_samples != 0):
