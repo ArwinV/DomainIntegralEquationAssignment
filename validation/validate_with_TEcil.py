@@ -28,7 +28,7 @@ show_plane(epsilon, step_size, title="Plane on which the field is incident")
 # Define input wave properties
 frequency = 1e9
 wavelength = speed_of_light/frequency
-input_angle = 120*np.pi/180
+input_angle = 45*np.pi/180
 
 # Store necessary variables into dictionary for E-field computation
 simparams = {
@@ -36,7 +36,8 @@ simparams = {
     'step_size': step_size,
     'wavelength': wavelength,
     'input_angle': input_angle,
-    'relative_permittivity': epsilon
+    'relative_permittivity': epsilon,
+    'method': 'plane'
     }
 
 # Compute E-field using domain_integral_equation
@@ -71,7 +72,7 @@ show_plane(np.absolute(E_fieldval), step_size, title="E field of analytical solu
 E_error = np.absolute(E_field - E_fieldval)
 
 # Plot the error
-show_plane(E_error, step_size, title="Error between analytical solution and algorithm")
+show_plane(E_error, step_size)#, title="Error between analytical solution and algorithm")
 
 # Plot the incident plane waves
 show_plane(np.real(E_inval), step_size, title="Incident field (analytical)")
@@ -79,5 +80,5 @@ show_plane(np.real(E_inval), step_size, title="Incident field (analytical)")
 mu0 = np.pi*4e-7
 epsilon0 = 8.854187812813e-12
 E_0 = np.sqrt(mu0/epsilon0) # Amplitude of incident wave
-E_incident = create_planewave(simulation_size, step_size, E_0, wavelength, input_angle)
+E_incident = create_planewave(simulation_size, step_size, E_0, wavelength, input_angle,1,'bessel')
 show_plane(np.real(E_incident), step_size, title="Incident field (algorithm)")
