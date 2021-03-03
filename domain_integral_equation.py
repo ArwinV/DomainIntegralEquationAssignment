@@ -9,7 +9,7 @@ import numpy as np
 from scipy.special import hankel1
 from scipy.spatial.distance import pdist, squareform
 from scipy.constants import epsilon_0, mu_0
-from helpers.create_incident_wave import create_planewave
+from helpers.create_incident_wave_bessel import create_planewave
 
 def domain_integral_equation(simparams, farfield_samples=0):
     """
@@ -54,6 +54,7 @@ def domain_integral_equation(simparams, farfield_samples=0):
         # input_angle = angle of incident wave, with respect to x-axis
     step_size = simparams['step_size']
         # step_size = physical distance between points in relative_permittivity
+    method = simparams['method']
     
     #Initialization: break to prevent errors later on
     if(np.size(relative_permittivity,0) != simulation_size[0]):
@@ -67,7 +68,7 @@ def domain_integral_equation(simparams, farfield_samples=0):
     # Incident field
     E_0 = np.sqrt(mu_0/epsilon_0) # Amplitude of incident wave
     k_0 = 2*np.pi/wavelength
-    E_incident = np.matrix.flatten(create_planewave(simulation_size, step_size, E_0, wavelength, input_angle), 'C')
+    E_incident = np.matrix.flatten(create_planewave(simulation_size, step_size, E_0, wavelength, input_angle, epsilon_B, method), 'C')
     # Wave number of incident field
     k_rho = 2*np.pi/wavelength*np.sqrt(epsilon_B)
     # Volume of each mesh part (constant for all squares of the mesh)

@@ -70,9 +70,9 @@ def create_planewave(planesize, grid_distance, E_0, wavelength, incident_angle, 
         rho = np.sqrt(xpoints**2 + ypoints**2) + ((xpoints==0)==(ypoints==0))*1e3*eps
         phi = np.arctan2(ypoints,xpoints)
         #k = 2*np.pi/wavelength*np.sqrt(epsilon_B)
-        E = np.zeros(len(rho))        
+        E = np.zeros((xsamples,ysamples), complex)      
         for i in range(0,2*nmax+1):
                 n = i-nmax
                 # Current coordinate
-                E = E + (1j)**(-n)**E_0*jv(n,rho*k0)*np.exp(1j*n*(phi-incident_angle))
+                E = E + np.transpose((1j)**(-n)*E_0*jv(n,rho*k0)*np.exp(1j*n*(phi-incident_angle)))
     return E

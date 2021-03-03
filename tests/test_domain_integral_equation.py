@@ -34,7 +34,8 @@ simparams = {
     'step_size': step_size,
     'wavelength': wavelength,
     'input_angle': input_angle,
-    'relative_permittivity': epsilon
+    'relative_permittivity': epsilon,
+    'method': 'bessel'
     }
 
 #Compute E-field using domain_integral_equation

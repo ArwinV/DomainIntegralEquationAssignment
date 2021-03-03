@@ -10,7 +10,7 @@ from scipy.constants import speed_of_light
 from helpers.create_testobject import plane_with_circle, plane_with_guide
 from helpers.visualize import show_plane
 from domain_integral_equation import domain_integral_equation
-from helpers.create_incident_wave import create_planewave
+from helpers.create_incident_wave_bessel import create_planewave
 from validation.TEcil import Analytical_2D_TE
 
 # Create epsilon plane
@@ -37,7 +37,7 @@ simparams = {
     'wavelength': wavelength,
     'input_angle': input_angle,
     'relative_permittivity': epsilon,
-    'method': 'plane'
+    'method': 'bessel'
     }
 
 # Compute E-field using domain_integral_equation
