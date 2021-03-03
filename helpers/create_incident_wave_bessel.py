@@ -74,5 +74,6 @@ def create_planewave(planesize, grid_distance, E_0, wavelength, incident_angle, 
         for i in range(0,2*nmax+1):
                 n = i-nmax
                 # Current coordinate
-                E = E + np.transpose((1j)**(-n)*E_0*jv(n,rho*k0)*np.exp(1j*n*(phi-incident_angle)))
+                E = E + np.transpose((1j)**(-n)*E_0*jv(n,rho*k0)*np.exp(1j*n*(phi-incident_angle+np.pi)))
+        E = E.T
     return E
