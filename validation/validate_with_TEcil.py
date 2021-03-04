@@ -28,7 +28,8 @@ show_plane(epsilon, step_size, title="Plane on which the field is incident")
 # Define input wave properties
 frequency = 1e9
 wavelength = speed_of_light/frequency
-input_angle = 45*np.pi/180
+theta_i = 45;
+input_angle = theta_i*np.pi/180
 
 # Store necessary variables into dictionary for E-field computation
 simparams = {
@@ -81,4 +82,4 @@ mu0 = np.pi*4e-7
 epsilon0 = 8.854187812813e-12
 E_0 = np.sqrt(mu0/epsilon0) # Amplitude of incident wave
 E_incident = create_planewave(simulation_size, step_size, E_0, wavelength, input_angle,1,'bessel')
-show_plane(np.real(E_incident), step_size, title="Incident field (algorithm)")
+show_plane(np.real(E_incident), step_size, title='Incident field (algorithm, plane wave) for 'r'$\theta_i$ = %i' %theta_i)
