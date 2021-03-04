@@ -40,7 +40,7 @@ def create_planewave(planesize, grid_distance, E_0, wavelength, incident_angle, 
     ysamples = planesize[1]
     
     # Determine components of the wave vector in x and y directions
-    incident_cart = np.array([np.cos(incident_angle), np.sin(incident_angle)])
+    incident_cart = np.array([np.sin(incident_angle), np.cos(incident_angle)])
     # Determine wave vector in x and y directions
     mu0 = np.pi*4e-7
     epsilon0 = 8.854187812813e-12
@@ -57,7 +57,7 @@ def create_planewave(planesize, grid_distance, E_0, wavelength, incident_angle, 
             for y in range(ysamples):
                 # Current coordinate
                 rho = np.array([x,y])*grid_distance
-                E[x][y] = E_0*np.exp(1j*np.dot(k_B, rho) + 1j*np.pi) # TM mode E-field
+                E[x][y] = E_0*np.exp(1j*np.dot(k_B, rho))#) + 1j*np.pi) # TM mode E-field
     if method == 'bessel':
         k0 = 2*np.pi/wavelength
         eps = np.finfo(float).eps
