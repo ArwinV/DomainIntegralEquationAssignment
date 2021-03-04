@@ -18,8 +18,10 @@ step_size = 0.05
 # plane wave with a frequency of 1Ghz with an incident angle of 45 degrees.
 frequency = 1e9
 wavelength = speed_of_light/frequency
-incident_angle = 45*np.pi/180
+theta_i = 45;
+incident_angle = theta_i*np.pi/180
+method = "bessel"
 E_0 = 1
 epsilon_B = 1
-E_plane = create_planewave(plane_size, step_size, E_0, wavelength, incident_angle,1,'bessel')
-show_plane(np.real(E_plane), step_size)
+E_plane = create_planewave(plane_size, step_size, E_0, wavelength, incident_angle,1,method)
+show_plane(np.real(E_plane), step_size, title='Incident field (Bessel) for 'r'$\theta_i$ = %i' %theta_i)
