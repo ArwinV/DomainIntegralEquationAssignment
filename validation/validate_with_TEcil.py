@@ -6,7 +6,7 @@ Created on Fri Feb 26 14:47:14 2021
 """
 
 import numpy as np
-from scipy.constants import speed_of_light
+from scipy.constants import speed_of_light, epsilon_0, mu_0
 from helpers.create_testobject import plane_with_circle, plane_with_guide
 from helpers.visualize import show_plane
 from domain_integral_equation import domain_integral_equation
@@ -78,8 +78,6 @@ show_plane(E_error, step_size, title="Error between analytical and algorithm")
 # Plot the incident plane waves
 show_plane(np.real(E_inval), step_size, title='Incident field (analytical)\nfor 'r'$\theta_i$ = %i' %theta_i)
 
-mu0 = np.pi*4e-7
-epsilon0 = 8.854187812813e-12
-E_0 = np.sqrt(mu0/epsilon0) # Amplitude of incident wave
-E_incident = create_planewave(simulation_size, step_size, E_0, wavelength, input_angle,1,'bessel')
+E_0 = np.sqrt(mu_0/epsilon_0) # Amplitude of incident wave
+E_incident = create_planewave(simulation_size, step_size, E_0, wavelength, input_angle, 1, 'plane')
 show_plane(np.real(E_incident), step_size, title='Incident field (algorithm, plane wave)\nfor 'r'$\theta_i$ = %i' %theta_i)
