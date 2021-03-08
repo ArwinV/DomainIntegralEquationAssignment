@@ -32,3 +32,4 @@ def show_plane(plane, grid_distance, title=""):
     plt.ylabel("Y [m]")
     plt.title(title)
     plt.grid(b=True)
+    plt.colorbar()
