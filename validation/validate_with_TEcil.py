@@ -38,7 +38,7 @@ simparams = {
     'wavelength': wavelength,
     'input_angle': input_angle,
     'relative_permittivity': epsilon,
-    'method': 'bessel'
+    'method': 'plane'
     }
 
 # Compute E-field using domain_integral_equation
@@ -73,13 +73,13 @@ show_plane(np.absolute(E_fieldval), step_size, title="E field of analytical solu
 E_error = np.absolute(E_field - E_fieldval)
 
 # Plot the error
-show_plane(E_error, step_size)#, title="Error between analytical solution and algorithm")
+show_plane(E_error, step_size, title="Error between analytical and algorithm")
 
 # Plot the incident plane waves
-show_plane(np.real(E_inval), step_size, title="Incident field (analytical)")
+show_plane(np.real(E_inval), step_size, title='Incident field (analytical)\nfor 'r'$\theta_i$ = %i' %theta_i)
 
 mu0 = np.pi*4e-7
 epsilon0 = 8.854187812813e-12
 E_0 = np.sqrt(mu0/epsilon0) # Amplitude of incident wave
 E_incident = create_planewave(simulation_size, step_size, E_0, wavelength, input_angle,1,'bessel')
-show_plane(np.real(E_incident), step_size, title='Incident field (algorithm, plane wave) for 'r'$\theta_i$ = %i' %theta_i)
+show_plane(np.real(E_incident), step_size, title='Incident field (algorithm, plane wave)\nfor 'r'$\theta_i$ = %i' %theta_i)
