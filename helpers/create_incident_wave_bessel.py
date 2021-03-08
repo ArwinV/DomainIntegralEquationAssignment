@@ -57,7 +57,7 @@ def create_planewave(planesize, grid_distance, E_0, wavelength, incident_angle, 
             for y in range(ysamples):
                 # Current coordinate
                 rho = np.array([x,y])*grid_distance
-                E[x][y] = E_0*np.exp(1j*np.dot(k_B, rho) + 1j*np.pi/2) # TM mode E-field
+                E[x][y] = E_0*np.exp(1j*np.dot(k_B, rho)-1j*np.pi/3) # TM mode E-field
     if method == 'bessel':
         k0 = 2*np.pi/wavelength
         eps = np.finfo(float).eps
