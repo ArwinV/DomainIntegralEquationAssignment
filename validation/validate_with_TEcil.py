@@ -17,16 +17,16 @@ from validation.TEcil import Analytical_2D_TE
 simulation_size = (50,50)
 
 # Circle in middle
-step_size = 0.05  #meters
-circle_diameter = 0.7 #meters
-circle_permittivity = 20 #relative
+step_size = 10  #meters
+circle_diameter = 150 #meters
+circle_permittivity = 4.7 #relative (glass)
 epsilon = plane_with_circle(simulation_size, step_size, circle_diameter, circle_permittivity)
 
 # Show plane
 show_plane(epsilon, step_size, title="Plane on which the field is incident")
 
 # Define input wave properties
-frequency = 1e9
+frequency = 1e6
 wavelength = speed_of_light/frequency
 theta_i = 45;
 input_angle = theta_i*np.pi/180
