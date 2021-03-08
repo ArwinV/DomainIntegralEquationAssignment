@@ -69,8 +69,11 @@ _, _, E_fieldval, E_inval = Analytical_2D_TE(simparams)
 # Show the validation E field
 show_plane(np.absolute(E_fieldval), step_size, title="E field of analytical solution")
 
-# Calculate difference between implementation and validation
-E_error = np.absolute(E_field - E_fieldval)
+# Calculate difference in magnitude between implementation and validation
+# TODO: Is difference in magnitude allright? Or should we take the magnitude of the difference?
+E_difference = np.abs(E_fieldval) - np.abs(E_field)
+# Get the error between analytical and algorithm in percentage
+E_error = np.abs(E_difference/np.abs(E_fieldval) * 100)
 
 # Plot the error
 show_plane(E_error, step_size, title="Error between analytical and algorithm")
