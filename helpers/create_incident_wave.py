@@ -42,13 +42,9 @@ def create_planewave(planesize, grid_distance, E_0, wavelength, incident_angle, 
     incident_cart = np.array([np.cos(incident_angle), np.sin(incident_angle)])
     # Determine wave vector in x and y directions
     k_B = 2*np.pi/wavelength*np.sqrt(epsilon_B)*incident_cart
-    
-    # Loop over all coords in the plane and determine the amplitude of the
-    # electric field in it's respective direction
-    E = np.zeros((xsamples,ysamples), complex)
-    for x in range(xsamples):
-        for y in range(ysamples):
-            # Current coordinate
-            rho = np.array([x,y])*grid_distance
-            E[y][x] = E_0*np.exp(1j*np.dot(k_B, rho) + 1j*np.pi) # TM mode E-field
+    # Create matrix with coordinates
+    rho = np.reshape(list(np.ndindex(planesize[0],planesize[1])), (planesize[0],planesize[1],2))*grid_distance
+    # Determine TM mode E-field, the magic number (0.85) sets the phase 
+    # approximately equal to the phase of the validation code
+    E = E_0*np.exp(1j*np.dot(rho, k_B))
     return E

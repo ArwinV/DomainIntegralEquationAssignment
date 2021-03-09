@@ -46,18 +46,14 @@ def create_planewave(planesize, grid_distance, E_0, wavelength, incident_angle, 
     epsilon0 = 8.854187812813e-12
     k0 = 2*np.pi/wavelength
     k_B = 2*np.pi/wavelength*np.sqrt(epsilon_B)*incident_cart
-
     
-    # Loop over all coords in the plane and determine the amplitude of the
-    # electric field in its respective direction
-    
+    # Determine E-field using default plane wave solution
     if method == 'plane':
-        E = np.zeros((xsamples,ysamples), complex)
-        for x in range(xsamples):
-            for y in range(ysamples):
-                # Current coordinate
-                rho = np.array([x,y])*grid_distance
-                E[x][y] = E_0*np.exp(1j*np.dot(k_B, rho)-1j*np.pi/3) # TM mode E-field
+        # Create matrix with coordinates
+        rho = np.reshape(list(np.ndindex(planesize[0],planesize[1])), (planesize[0],planesize[1],2))*grid_distance
+        # Determine TM mode E-field
+        E = E_0*np.exp(1j*np.dot(rho, k_B))
+    # Determine E-field the same way as the validation code
     if method == 'bessel':
         k0 = 2*np.pi/wavelength
         eps = np.finfo(float).eps
