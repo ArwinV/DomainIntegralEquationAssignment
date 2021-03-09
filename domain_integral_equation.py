@@ -83,9 +83,6 @@ def domain_integral_equation(simparams, farfield_samples=0):
     # location and convert matrix to vector
     Delta_epsilon = np.matrix.flatten(relative_permittivity,'C') - epsilon_B
     
-    # Greens function matrix
-    G = np.zeros((simulation_size[0]*simulation_size[1],simulation_size[0]*simulation_size[1]), complex)
-    
     # Create vector with all locations in the plane
     r = np.array(list(np.ndindex(simulation_size[0],simulation_size[1])))*step_size
 
@@ -93,7 +90,7 @@ def domain_integral_equation(simparams, farfield_samples=0):
     varrho = pdist(r, 'euclidean')
     # Calculate G matrix
     G_condensed = 1j/4*hankel1(0,k_rho*varrho)
-    # Convert condensed distance matrix to square form
+    # Convert condensed G matrix to square form
     G = squareform(G_condensed)
     # Set diagonal of G matrix to 0
     np.fill_diagonal(G, 0)
