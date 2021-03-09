@@ -12,6 +12,7 @@ from helpers.visualize import show_plane
 from domain_integral_equation import domain_integral_equation
 from helpers.create_incident_wave_bessel import create_planewave
 from validation.TEcil import Analytical_2D_TE
+from timeit import default_timer as timer
 
 # Create epsilon plane
 simulation_size = (50,50)
@@ -42,7 +43,10 @@ simparams = {
     }
 
 # Compute E-field using domain_integral_equation
+start_algorithm = timer()
 E_field = domain_integral_equation(simparams)
+end_algorithm = timer()
+print("Solution found with algorithm in {} seconds".format(end_algorithm-start_algorithm))
 
 # Show the calculated E field
 show_plane(np.absolute(E_field), step_size, title="E field calculated with algorithm")
@@ -64,7 +68,10 @@ simparams = {
     }
 
 # Compute E-field using TEcil
+start_analytical = timer()
 _, _, E_fieldval, E_inval = Analytical_2D_TE(simparams)
+end_analytical = timer()
+print("Analytical solution found in {} seconds".format(end_analytical-start_analytical))
 
 # Show the validation E field
 show_plane(np.absolute(E_fieldval), step_size, title="E field of analytical solution")
