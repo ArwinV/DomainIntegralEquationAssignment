@@ -44,7 +44,6 @@ def create_planewave(planesize, grid_distance, E_0, wavelength, incident_angle, 
     k_B = 2*np.pi/wavelength*np.sqrt(epsilon_B)*incident_cart
     # Create matrix with coordinates
     rho = np.reshape(list(np.ndindex(planesize[0],planesize[1])), (planesize[0],planesize[1],2))*grid_distance
-    # Determine TM mode E-field, the magic number (0.85) sets the phase 
-    # approximately equal to the phase of the validation code
+    # Determine TM mode E-field
     E = E_0*np.exp(1j*np.dot(rho, k_B))
     return E
