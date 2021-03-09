@@ -87,11 +87,7 @@ def domain_integral_equation(simparams, farfield_samples=0):
     G = np.zeros((simulation_size[0]*simulation_size[1],simulation_size[0]*simulation_size[1]), complex)
     
     # Create vector with all locations in the plane
-    r = np.zeros((simulation_size[0]*simulation_size[1],2))
-   
-    for x in range(simulation_size[0]):
-        for y in range(simulation_size[1]):
-            r[x*simulation_size[1]+y] = np.array([x,y])*step_size
+    r = np.array(list(np.ndindex(simulation_size[0],simulation_size[1])))*step_size
 
     # Calculate distance between all points in the plane
     varrho = squareform(pdist(r, 'euclidean'))
