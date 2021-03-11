@@ -56,6 +56,7 @@ def domain_integral_equation(simparams, farfield_samples=0):
         # step_size = physical distance between points in relative_permittivity
     method = simparams['method']
     
+    
     #Initialization: break to prevent errors later on
     if(np.size(relative_permittivity,0) != simulation_size[0]):
             raise Exception("Error, number of x-coordinates in relative permittivity matrix incorrect")
@@ -103,6 +104,11 @@ def domain_integral_equation(simparams, farfield_samples=0):
     # Calculate farfield samples if requested
     if (farfield_samples != 0):
         # TODO: Find farfield samples
+        ff_step = max(simulation_size)*10*step_size #Each sample further away from origin
+        rho_samples = range(0,farfield_samples+1)
+        G_ff = 1j/4*hankel1(0,k_rho*rho_samples)
+        Delta_epsilon_ff = np.matrix.flatten(np.zeros((farfield_samples,1))) #Assume farfield samples are inside background medium
+        #E_ff = np.matmul(np.linalg.inv(np.identity(1*farfield_samples) - np.matmul(G_ff.T, np.diag(Delta_epsilon_ff))*V_mesh*np.square(k_0) - M*np.square(k_0)*np.diag(Delta_epsilon_ff)), E_incident)
         farfield = 0
         return E_field, farfield
     else:
