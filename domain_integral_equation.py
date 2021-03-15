@@ -9,7 +9,7 @@ import numpy as np
 from scipy.special import hankel1
 from scipy.spatial.distance import pdist, squareform
 from scipy.constants import epsilon_0, mu_0
-from helpers.create_incident_wave_bessel import create_planewave
+from helpers.create_incident_wave_new_plane_input import create_planewave
 
 def domain_integral_equation(simparams, farfield_samples=0):
     """
