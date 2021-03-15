@@ -10,7 +10,8 @@ from scipy.constants import speed_of_light, epsilon_0, mu_0
 from helpers.create_testobject import plane_with_circle, plane_with_guide
 from helpers.visualize import show_plane
 from domain_integral_equation import domain_integral_equation
-from helpers.create_incident_wave_bessel import create_planewave
+from helpers.create_incident_wave_new_plane_input import create_planewave
+from helpers.calculate_error import energybased_error
 from validation.TEcil import Analytical_2D_TE
 from timeit import default_timer as timer
 
@@ -19,7 +20,7 @@ simulation_size = (50,50)
 
 # Circle in middle
 step_size = 10  #meters
-circle_diameter = 150 #meters
+circle_diameter = 25 #meters
 circle_permittivity = 4.7 #relative (glass)
 epsilon = plane_with_circle(simulation_size, step_size, circle_diameter, circle_permittivity)
 
@@ -77,10 +78,11 @@ print("Analytical solution found in {} seconds".format(end_analytical-start_anal
 show_plane(np.absolute(E_fieldval), step_size, title="E field of analytical solution")
 
 # Calculate difference in magnitude between implementation and validation
-# TODO: Is difference in magnitude allright? Or should we take the magnitude of the difference?
 E_difference = np.abs(E_fieldval) - np.abs(E_field)
 # Get the error between analytical and algorithm in percentage
 E_error = np.abs(E_difference/np.abs(E_fieldval) * 100)
+
+E_error_abs, E_error_norm = energybased_error(E_fieldval,E_field)
 
 # Plot the error
 show_plane(E_error, step_size, title="Error between analytical and algorithm")
