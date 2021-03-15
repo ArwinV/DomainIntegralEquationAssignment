@@ -3,6 +3,7 @@
 Created on Sat Mar 13 16:14:27 2021
 
 @author: Wendy
+Source: https://www.netlib.org/lapack/lug/node75.html
 """
 
 import numpy as np
