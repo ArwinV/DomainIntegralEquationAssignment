@@ -8,14 +8,14 @@ from helpers.validation import validation_cilinder
 import numpy as np
 import matplotlib.pyplot as plt
 
-sample = (40,44,48,52,56,60)
-totalsize = 500
+sample = [*range(20,101,4)]
+totalsize = 100
 
 step = np.divide(totalsize,sample)
 simsize =  [0]*np.size(step)
 for k in range(np.size(sample)):
     simsize[k] = (sample[k], sample[k])
-circle_diameter = totalsize/10
+circle_diameter = totalsize/4
 relstep = np.divide(step,circle_diameter)
 
 errornorm = [0]*np.size(step)
@@ -29,8 +29,23 @@ for i in range(np.size(step)):
     errornorm[i] = E_error_norm
     time[i] = algorithm_time
     errormax[i] = E_error_max
-    
-plt.plot(relstep,errornorm)
-plt.show()
-plt.plot(relstep,errormax)
+
+plt.figure()
+plt.plot(step,errornorm ,label='l2-norm')
+#plt.plot(step,errormax,label='l$\infty$-norm') #Turn on if maximum error is desired
+plt.grid(True)
+plt.title('Error progression for decreasing step size')
+#plt.xscale('log')
+plt.xlabel('Step size [m]')
+plt.ylabel('Error %')
+plt.legend()
+
+plt.figure()
+plt.plot(errornorm,time)
+plt.grid(True)
+plt.title('Computation time necessary to achieve certain error')
+plt.yscale('log')
+plt.xlabel('l2-Error %')
+plt.ylabel('Time [s]')
+
 plt.show()
