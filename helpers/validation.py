@@ -69,7 +69,4 @@ def validation_cilinder(step_size,simulation_size,circle_diameter,circle_permitt
     E_error_abs, E_error_norm = energybased_error(E_fieldval,E_field)
     E_error_max = np.amax(E_error)
     
-    # Plot the error
-    show_plane(E_error, step_size, title="Error between analytical and algorithm")
-    
     return E_error_norm, algorithm_time, E_error_max
