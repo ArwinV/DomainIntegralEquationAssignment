@@ -57,9 +57,7 @@ def validation_cilinder(step_size,simulation_size,circle_diameter,circle_permitt
         }
     
     # Compute E-field using TEcil
-    start_analytical = timer()
     _, _, E_fieldval, E_inval = Analytical_2D_TE(simparams)
-    end_analytical = timer()
     
     # Calculate difference in magnitude between implementation and validation
     E_difference = np.abs(E_fieldval) - np.abs(E_field)

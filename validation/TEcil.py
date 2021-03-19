@@ -79,7 +79,7 @@ def Analytical_2D_TE(simparams):
     epsilon0 = 8.854187812813e-12
     k0 = omega*math.sqrt(mu0*epsilon0)
     E0 = math.sqrt(mu0/epsilon0) # Amplitude of incident wave
-    print('value of Eo', E0)
+    #print('value of Eo', E0)
 #---------------- Compute coefficients at boundary rho=a-----------------------
     B = np.zeros(2*nmax+1,dtype=np.complex_)
     A = B.copy()

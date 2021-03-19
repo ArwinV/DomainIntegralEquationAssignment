@@ -9,13 +9,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 sample = [*range(20,101,4)]
-totalsize = 100
+totalsize = 500
 
 step = np.divide(totalsize,sample)
 simsize =  [0]*np.size(step)
 for k in range(np.size(sample)):
     simsize[k] = (sample[k], sample[k])
-circle_diameter = totalsize/4
+circle_diameter = totalsize/10
 relstep = np.divide(step,circle_diameter)
 
 errornorm = [0]*np.size(step)
@@ -24,6 +24,7 @@ errormax = [0]*np.size(step)
 
 for i in range(np.size(step)):
     simulation_size = simsize[i]
+    print(simulation_size)
     step_size = step[i]
     E_error_norm, algorithm_time, E_error_max = validation_cilinder(step_size,simulation_size,circle_diameter)
     errornorm[i] = E_error_norm
