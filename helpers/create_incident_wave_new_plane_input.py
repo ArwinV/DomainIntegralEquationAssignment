@@ -55,26 +55,23 @@ def create_planewave(planesize, grid_distance, E_0, wavelength, incident_angle, 
     ymin = -ysamples*grid_distance/2
     ymax = ysamples*grid_distance/2
     xpoints,ypoints = np.meshgrid(np.linspace(xmin, xmax, xsamples), np.linspace(ymin, ymax, ysamples))
-    
     # Determine E-field using default plane wave solution
     if method == 'plane':
         E = np.zeros((xsamples,ysamples), complex)  #allocating space for E-field
         r = np.zeros((xsamples,ysamples))
         omega = 2*np.pi*speed_of_light/wavelength #2*pi*f
+        #TODO Look at the the difference between k_0 and K_0
         K_0 = omega*np.sqrt(mu0*epsilon0)
         eps = np.finfo(float).eps
-        # x_grid = np.mgrid[0:planesize[0]:grid_distance,0:planesize[1]:grid_distance]
         x_grid = np.mgrid[0:planesize[0]]*grid_distance
         y_grid = np.mgrid[0:planesize[1]]*grid_distance
-        # for j in range(0,planesize[0]):
-        #     for k in range(0,planesize[1]):
-        #         r[j,k] = np.sqrt(x_grid[j]**2+y_grid[k]**2)
         r = np.sqrt(xpoints**2 + ypoints**2) + ((xpoints==0)==(ypoints==0))*1e3*eps
         theta = np.arctan2(ypoints,xpoints)
         theta_i = incident_angle
         for i in range(0,2*modes+1):
             n = i-modes
             E = E + E_0*1j**n*jv(n,K_0*r)*np.exp(1j*n*(theta-theta_i))
+        
     # Determine E-field the same way as the validation code
     if method == 'bessel':
         k0 = 2*np.pi/wavelength
