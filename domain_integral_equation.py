@@ -93,11 +93,12 @@ def domain_integral_equation(simparams, farfield_samples=0):
     G_condensed = 1j/4*hankel1(0,k_rho*varrho)
     # Convert condensed G matrix to square form
     G = squareform(G_condensed)
-    # Set diagonal of G matrix to 0
-    np.fill_diagonal(G, 0)
+    # Set diagonal of G matrix to M/V_mesh
+    np.fill_diagonal(G, M/V_mesh)
         
     # Total E field (vector)
-    E_r = np.matmul(np.linalg.inv(np.identity(simulation_size[0]*simulation_size[1]) - np.matmul(G.T, np.diag(Delta_epsilon))*V_mesh*np.square(k_0) - M*np.square(k_0)*np.diag(Delta_epsilon)), E_incident)
+    nloc = simulation_size[0]*simulation_size[1]
+    E_r = np.linalg.inv(np.identity(nloc) - k_0**2 * G @ np.diag(Delta_epsilon*V_mesh)) @ E_incident
     # Reshape E field to be a 2d matrix
     E_field = np.reshape(E_r, simulation_size, order='C')
     
