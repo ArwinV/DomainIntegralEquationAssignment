@@ -85,7 +85,6 @@ def add_locations(location, location_size, locations_dynamic, location_size_dyna
 
     """
     
-    
     # Distance to center
     dist_middle = np.linalg.norm(center - location)
     # Check if point is far away enough for this size to be added
@@ -132,7 +131,7 @@ def calculate_average_epsilon(epsilon, locations, location_sizes, grid_distance)
         eps_avg = 0
         for x in np.linspace(l[0]-(l_s-1)/2, l[0]+(l_s-1)/2, int(l_s)):
             for y in np.linspace(l[1]-(l_s-1)/2, l[1]+(l_s-1)/2, int(l_s)):
-                eps_avg += epsilon[int(x*grid_distance)][int(y*grid_distance)]
+                eps_avg += epsilon[int(x/grid_distance)][int(y/grid_distance)]
         eps_avg /= l_s**2
         epsilon_dynamic.append(eps_avg)
     return epsilon_dynamic
@@ -166,11 +165,11 @@ def dynamic_to_grid(locations, val_dynamic, location_sizes, planesize, grid_dist
     # Loop over coordinates
     for l_index in range(np.shape(locations)[0]):
         # Current location and location size
-        l = locations[l_index]
+        l = locations[l_index]/grid_distance
         l_s = location_sizes[l_index]
         # Add value to array
-        for x in np.linspace(l[0]-(l_s-1)/2, l[0]+(l_s-1)/2, int(l_s)):
-            for y in np.linspace(l[1]-(l_s-1)/2, l[1]+(l_s-1)/2, int(l_s)):
+        for x in np.linspace(l[0]-(l_s)/2, l[0]+(l_s)/2, int(l_s), endpoint=False):
+            for y in np.linspace(l[1]-(l_s)/2, l[1]+(l_s)/2, int(l_s), endpoint=False):
                 val_grid[int(x)][int(y)] = val_dynamic[l_index]
     return val_grid
             

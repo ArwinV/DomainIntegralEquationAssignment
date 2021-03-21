@@ -15,20 +15,20 @@ from scipy.constants import epsilon_0, mu_0, speed_of_light
 import numpy as np
 from martin98 import martin98
 
-plane_size = (120,120)
-step_size = 1
+plane_size = (100,100)
+step_size = 10
 
 # Define input wave properties
-frequency = 10e6
+frequency = 1e6
 wavelength = speed_of_light/frequency
 input_angle = 120*np.pi/180
 
 # Create a plane with a circle in the middle
-epsilon_circle = plane_with_circle(plane_size, step_size, 25, 4.7)
+epsilon_circle = plane_with_circle(plane_size, step_size, 50, 4.7)
 
 # Convert grid to dynamic
 max_size = 4
-size_limits = [0, 20, 40]
+size_limits = [0, 200, 400]
 locations, location_sizes, epsilon = grid_to_dynamic(epsilon_circle, step_size, max_size, size_limits)
 
 # Plot location points on plane
