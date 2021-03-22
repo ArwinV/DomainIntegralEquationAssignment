@@ -7,9 +7,48 @@ Created on Thu Mar 18 14:25:03 2021
 """
 
 import numpy as np
-from scipy.constants import speed_of_light, mu_0, epsilon_0
 from scipy.special import hankel1
 from scipy.spatial.distance import pdist, squareform
+from helpers.dynamic_grid import grid_to_dynamic, dynamic_to_grid
+from helpers.visualize import show_plane
+from scipy.constants import epsilon_0, mu_0, speed_of_light
+from helpers.create_incident_wave import create_planewave_dynamic
+
+
+def dynamic_shaping(simparams):
+    #Initialization: read parameters from dictionary
+    locations = simparams['locations']
+        
+    wavelength = simparams['wavelength']
+        # wavelength = wavelength of incident plane wave
+    permittivity = simparams['relative_permittivity']
+        # relative_permittivity = relative permittivity at all evaluation points
+    input_angle = simparams['input_angle']
+        # input_angle = angle of incident wave, with respect to x-axis
+    step_size = simparams['step_size']
+        # step_size = physical distance between points in relative_permittivity
+    location_sizes = simparams['location_sizes']
+    plane_size = simparams['simulation_size']
+        # array containing number of evaluation points in x,y-directions
+    
+    # Convert back to test
+    epsilon_grid = dynamic_to_grid(locations, permittivity, location_sizes, plane_size, step_size)
+    show_plane(np.real(epsilon_grid), step_size)
+
+    # Calculate incident wave on locations
+    E_0 = np.sqrt(mu_0/epsilon_0) # Amplitude of incident wave
+    E_incident = create_planewave_dynamic(locations, E_0, wavelength, input_angle)
+
+    # Convert to grid again
+    E_incident_grid = dynamic_to_grid(locations, E_incident, location_sizes, plane_size, step_size)
+    show_plane(np.real(E_incident_grid.T), step_size)
+
+    # Calculate scattering
+    E = martin98(locations, E_incident, permittivity, location_sizes, wavelength, step_size)
+
+    # Convert result to grid
+    E_grid = dynamic_to_grid(locations, E, location_sizes, plane_size, step_size)
+    return E_grid
 
 def martin98(locations, E_incident, permittivity, location_sizes, wavelength, step_size):
     """

@@ -8,12 +8,12 @@ Created on Thu Mar 18 14:40:28 2021
 
 from helpers.visualize import show_plane
 from helpers.create_testobject import plane_with_circle
-from helpers.dynamic_grid import grid_to_dynamic, dynamic_to_grid
+from helpers.dynamic_grid import grid_to_dynamic
 from helpers.create_incident_wave import create_planewave_dynamic
 import matplotlib.pyplot as plt
 from scipy.constants import epsilon_0, mu_0, speed_of_light
 import numpy as np
-from martin98 import martin98
+from martin98 import dynamic_shaping
 
 plane_size = (100,100)
 step_size = 10
@@ -31,27 +31,22 @@ max_size = 4
 size_limits = [0, 200, 400]
 locations, location_sizes, epsilon = grid_to_dynamic(epsilon_circle, step_size, max_size, size_limits)
 
-# Plot location points on plane
-#fig = plt.figure()
-#for loc in locations:
-#    plt.scatter(loc[0], loc[1], color='green')
-#plt.gca().set_aspect('equal')
+##Plot location points on plane
+# fig = plt.figure()
+# for loc in locations:
+#     plt.scatter(loc[0], loc[1], color='green')
+# plt.gca().set_aspect('equal')
 
-# Convert back to test
-epsilon_grid = dynamic_to_grid(locations, epsilon, location_sizes, plane_size, step_size)
-show_plane(np.real(epsilon_grid), step_size)
+#Store necessary variables into dictionary for E-field computation
+simparams = {
+    'simulation_size': plane_size,
+    'step_size': step_size,
+    'wavelength': wavelength,
+    'input_angle': input_angle,
+    'relative_permittivity': epsilon,
+    'locations': locations,
+    'location_sizes': location_sizes
+    }
 
-# Calculate incident wave on locations
-E_0 = np.sqrt(mu_0/epsilon_0) # Amplitude of incident wave
-E_incident = create_planewave_dynamic(locations, E_0, wavelength, input_angle)
-
-# Convert to grid again
-E_incident_grid = dynamic_to_grid(locations, E_incident, location_sizes, plane_size, step_size)
-show_plane(np.real(E_incident_grid.T), step_size)
-
-# Calculate scattering
-E = martin98(locations, E_incident, epsilon, location_sizes, wavelength, step_size)
-
-# Convert result to grid
-E_grid = dynamic_to_grid(locations, E, location_sizes, plane_size, step_size)
+E_grid = dynamic_shaping(simparams)
 show_plane(np.absolute(E_grid.T), step_size, title="E field of algorithm solution")
