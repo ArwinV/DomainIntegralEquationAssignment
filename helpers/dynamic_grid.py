@@ -40,6 +40,9 @@ def grid_to_dynamic(epsilon, grid_distance, max_size, size_limits):
     # Find middle
     xsize = np.shape(epsilon)[0]
     ysize = np.shape(epsilon)[1]
+    # Throw error if size of grid is wrong
+    if xsize % max_size != 0 or ysize % max_size != 0:
+        raise Exception("Error, grid size is not a multiple of max_size ({})".format(max_size))
     coord_middle = np.array([xsize/2, ysize/2])*grid_distance
     # Empty arrays
     locations_dynamic = []
