@@ -2,7 +2,7 @@
 """
 Created on Fri Feb 26 14:47:14 2021
 
-@author: Arwin
+@author: Arwin, Wendy
 """
 
 import numpy as np
@@ -14,32 +14,35 @@ from helpers.create_incident_wave_new_plane_input import create_planewave
 from helpers.calculate_error import energybased_error
 from validation.TEcil import Analytical_2D_TE
 from timeit import default_timer as timer
+from helpers.dynamic_grid import grid_to_dynamic
+from martin98 import dynamic_shaping
 
 # Create epsilon plane
-simulation_size = (50,50)
+simulation_size = (100,100)
 
 # Circle in middle
 step_size = 10  #meters
-circle_diameter = 25 #meters
+circle_diameter = 50 #meters
 circle_permittivity = 4.7 #relative (glass)
-epsilon = plane_with_circle(simulation_size, step_size, circle_diameter, circle_permittivity)
+epsilon_circle = plane_with_circle(simulation_size, step_size, circle_diameter, circle_permittivity)
 
 # Show plane
-show_plane(epsilon, step_size, title="Plane on which the field is incident")
+show_plane(epsilon_circle, step_size, title="Plane on which the field is incident")
 
 # Define input wave properties
 frequency = 1e6
 wavelength = speed_of_light/frequency
-theta_i = 45;
+theta_i = 120;
 input_angle = theta_i*np.pi/180
 
+#STATIC GRID
 # Store necessary variables into dictionary for E-field computation
 simparams = {
     'simulation_size': simulation_size,
     'step_size': step_size,
     'wavelength': wavelength,
     'input_angle': input_angle,
-    'relative_permittivity': epsilon,
+    'relative_permittivity': epsilon_circle,
     'method': 'plane'
     }
 
@@ -51,6 +54,25 @@ print("Solution found with algorithm in {} seconds".format(end_algorithm-start_a
 
 # Show the calculated E field
 show_plane(np.absolute(E_field), step_size, title="E field calculated with algorithm")
+
+#DYNAMIC GRID
+# Define dynamic grid properties
+max_size = 4
+size_limits = [0, 200, 400]
+locations, location_sizes, epsilon = grid_to_dynamic(epsilon_circle, step_size, max_size, size_limits)
+
+simparams['relative_permittivity'] = epsilon
+simparams['locations'] = locations
+simparams['location_sizes'] = location_sizes
+
+start_dynamic = timer()
+E_grid = dynamic_shaping(simparams)
+end_dynamic = timer()
+print("Solution found with dynamic algorithm in {} seconds".format(end_dynamic-start_dynamic))
+
+# Show the calculated E field
+show_plane(np.absolute(E_grid.T), step_size, title="E field calculated with dynamic algorithm")
+
 
 # TEcil expects different simparams, so create new dictionary
 xmin = -simulation_size[0]*step_size/2
@@ -74,9 +96,16 @@ _, _, E_fieldval, E_inval = Analytical_2D_TE(simparams)
 end_analytical = timer()
 print("Analytical solution found in {} seconds".format(end_analytical-start_analytical))
 
+#Update dictionary for dynamic grid
+x=np.zeros(len(locations))
+for j in range(len(locations)):
+    x[j]=locations[j][0]
+simparams['evaluation_points_x']
+
 # Show the validation E field
 show_plane(np.absolute(E_fieldval), step_size, title="E field of analytical solution")
 
+#ERROR CALCULATION
 # Calculate difference in magnitude between implementation and validation
 E_difference = np.abs(E_fieldval) - np.abs(E_field)
 # Get the error between analytical and algorithm in percentage
@@ -85,11 +114,21 @@ E_error = np.abs(E_difference/np.abs(E_fieldval) * 100)
 E_error_abs, E_error_norm = energybased_error(E_fieldval,E_field)
 
 # Plot the error
-show_plane(E_error, step_size, title="Error between analytical and algorithm")
+show_plane(E_error, step_size, title="Error between analytical and static algorithm")
 
-# Plot the incident plane waves
-show_plane(np.real(E_inval), step_size, title='Incident field (analytical)\nfor 'r'$\theta_i$ = %i' %theta_i)
+# Calculate difference in magnitude between dynamic implementation and validation
+E_difference_grid = np.abs(E_fieldval) - np.abs(E_grid)
+# Get the error between analytical and algorithm in percentage
+E_griderror = np.abs(E_difference_grid/np.abs(E_fieldval) * 100)
 
-E_0 = np.sqrt(mu_0/epsilon_0) # Amplitude of incident wave
-E_incident = create_planewave(simulation_size, step_size, E_0, wavelength, input_angle, 1, 'plane')
-show_plane(np.real(E_incident), step_size, title='Incident field (algorithm, plane wave)\nfor 'r'$\theta_i$ = %i' %theta_i)
+E_griderror_abs, E_griderror_norm = energybased_error(E_fieldval,E_grid)
+
+# Plot the error
+show_plane(E_griderror, step_size, title="Error between analytical and algorithm")
+
+# # Plot the incident plane waves
+# show_plane(np.real(E_inval), step_size, title='Incident field (analytical)\nfor 'r'$\theta_i$ = %i' %theta_i)
+
+# E_0 = np.sqrt(mu_0/epsilon_0) # Amplitude of incident wave
+# E_incident = create_planewave(simulation_size, step_size, E_0, wavelength, input_angle, 1, 'plane')
+# show_plane(np.real(E_incident), step_size, title='Incident field (algorithm, plane wave)\nfor 'r'$\theta_i$ = %i' %theta_i)
