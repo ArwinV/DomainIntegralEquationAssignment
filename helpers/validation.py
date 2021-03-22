@@ -6,16 +6,17 @@ Created on Fri Feb 26 14:47:14 2021
 """
 
 import numpy as np
-from scipy.constants import speed_of_light, epsilon_0, mu_0
+from scipy.constants import speed_of_light
 from helpers.create_testobject import plane_with_circle, plane_with_guide
-from helpers.visualize import show_plane
 from domain_integral_equation import domain_integral_equation
-from helpers.create_incident_wave_new_plane_input import create_planewave
 from helpers.calculate_error import energybased_error
 from validation.TEcil import Analytical_2D_TE
 from timeit import default_timer as timer
+from helpers.dynamic_grid import grid_to_dynamic, dynamic_to_grid
+from martin98 import dynamic_shaping
 
-def validation_cilinder(step_size,simulation_size,circle_diameter,circle_permittivity=4.7):
+def validation_cilinder(step_size,simulation_size,circle_diameter,grid='static',circle_permittivity=4.7):
+    
     epsilon = plane_with_circle(simulation_size, step_size, circle_diameter, circle_permittivity)
     
     # Define input wave properties
@@ -33,12 +34,26 @@ def validation_cilinder(step_size,simulation_size,circle_diameter,circle_permitt
         'relative_permittivity': epsilon,
         'method': 'plane'
         }
-    
-    # Compute E-field using domain_integral_equation
-    start_algorithm = timer()
-    E_field = domain_integral_equation(simparams)
-    end_algorithm = timer()
-    algorithm_time = end_algorithm - start_algorithm
+    if grid == 'static':
+        # Compute E-field using domain_integral_equation
+        start_algorithm = timer()
+        E_field = domain_integral_equation(simparams)
+        end_algorithm = timer()
+        algorithm_time = end_algorithm - start_algorithm
+    elif grid == 'dynamic':
+        max_size = 4
+        size_limits = [0, 200, 400]
+        locations, location_sizes, epsilon = grid_to_dynamic(epsilon, step_size, max_size, size_limits)
+        
+        simparams['relative_permittivity'] = epsilon
+        simparams['locations'] = locations
+        simparams['location_sizes'] = location_sizes
+
+        start_dynamic = timer()
+        E_field = dynamic_shaping(simparams)
+        E_field = E_field.T
+        end_dynamic = timer()
+        algorithm_time = end_dynamic - start_dynamic
     
     # TEcil expects different simparams, so create new dictionary
     xmin = -simulation_size[0]*step_size/2
@@ -59,10 +74,14 @@ def validation_cilinder(step_size,simulation_size,circle_diameter,circle_permitt
     # Compute E-field using TEcil
     _, _, E_fieldval, E_inval = Analytical_2D_TE(simparams)
     
+    if grid == 'dynamic':
+        loc_val, loc_size_val, E_val_dyn1 = grid_to_dynamic(E_fieldval, step_size, max_size, size_limits)
+        E_fieldval = dynamic_to_grid(loc_val,E_val_dyn1,loc_size_val,simulation_size,step_size)
+    
     # Calculate difference in magnitude between implementation and validation
     E_difference = np.abs(E_fieldval) - np.abs(E_field)
     # Get the error between analytical and algorithm in percentage
-    E_error = np.abs(E_difference/np.abs(E_fieldval) * 100)
+    E_error = np.abs(E_difference)/np.abs(E_fieldval) * 100
     
     E_error_abs, E_error_norm = energybased_error(E_fieldval,E_field)
     E_error_max = np.amax(E_error)

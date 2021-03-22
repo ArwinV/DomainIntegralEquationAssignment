@@ -8,7 +8,7 @@ from helpers.validation import validation_cilinder
 import numpy as np
 import matplotlib.pyplot as plt
 
-sample = [*range(20,101,4)]
+sample = [*range(52,53,4)]
 totalsize = 500
 
 step = np.divide(totalsize,sample)
@@ -22,31 +22,36 @@ errornorm = [0]*np.size(step)
 time = [0]*np.size(step)
 errormax = [0]*np.size(step)
 
-for i in range(np.size(step)):
-    simulation_size = simsize[i]
-    print(simulation_size)
-    step_size = step[i]
-    E_error_norm, algorithm_time, E_error_max = validation_cilinder(step_size,simulation_size,circle_diameter)
-    errornorm[i] = E_error_norm
-    time[i] = algorithm_time
-    errormax[i] = E_error_max
+grids = ('static', 'dynamic')
 
-plt.figure()
-plt.plot(step,errornorm ,label='l2-norm')
-#plt.plot(step,errormax,label='l$\infty$-norm') #Turn on if maximum error is desired
-plt.grid(True)
-plt.title('Error progression for decreasing step size')
-#plt.xscale('log')
-plt.xlabel('Step size [m]')
-plt.ylabel('Error %')
-plt.legend()
 
-plt.figure()
-plt.plot(errornorm,time)
-plt.grid(True)
-plt.title('Computation time necessary to achieve certain error')
-plt.yscale('log')
-plt.xlabel('l2-Error %')
-plt.ylabel('Time [s]')
-
-plt.show()
+for k in range(np.size(grids)):
+    grid = grids[k]
+    for i in range(np.size(step)):
+        simulation_size = simsize[i]
+        print(simulation_size)
+        step_size = step[i]
+        E_error_norm, algorithm_time, E_error_max = validation_cilinder(step_size,simulation_size,circle_diameter,grid)
+        errornorm[i] = E_error_norm
+        time[i] = algorithm_time
+        errormax[i] = E_error_max
+        
+    plt.figure()
+    plt.plot(step,errornorm ,label='l2-norm')
+    #plt.plot(step,errormax,label='l$\infty$-norm') #Turn on if maximum error is desired
+    plt.grid(True)
+    plt.title('Error progression for decreasing step size')
+    #plt.xscale('log')
+    plt.xlabel('Step size [m]')
+    plt.ylabel('Error %')
+    plt.legend()
+    
+    plt.figure()
+    plt.plot(errornorm,time)
+    plt.grid(True)
+    plt.title('Computation time necessary to achieve certain error')
+    plt.yscale('log')
+    plt.xlabel('l2-Error %')
+    plt.ylabel('Time [s]')
+    
+    plt.show()

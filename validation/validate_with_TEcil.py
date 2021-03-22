@@ -110,7 +110,7 @@ show_plane(np.absolute(E_fieldval_dyn), step_size, title="E field of analytical 
 # Calculate difference in magnitude between implementation and validation
 E_difference = np.abs(E_fieldval) - np.abs(E_field)
 # Get the error between analytical and algorithm in percentage
-E_error = np.abs(E_difference/np.abs(E_fieldval) * 100)
+E_error = np.abs(E_difference)/np.abs(E_fieldval) * 100
 
 E_error_abs, E_error_norm = energybased_error(E_fieldval,E_field)
 
