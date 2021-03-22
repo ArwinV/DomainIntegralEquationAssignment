@@ -6,22 +6,21 @@ Created on Fri Feb 26 14:47:14 2021
 """
 
 import numpy as np
-from scipy.constants import speed_of_light, epsilon_0, mu_0
+from scipy.constants import speed_of_light
 from helpers.create_testobject import plane_with_circle, plane_with_guide
 from helpers.visualize import show_plane
 from domain_integral_equation import domain_integral_equation
-from helpers.create_incident_wave_new_plane_input import create_planewave
 from helpers.calculate_error import energybased_error
 from validation.TEcil import Analytical_2D_TE
 from timeit import default_timer as timer
-from helpers.dynamic_grid import grid_to_dynamic
+from helpers.dynamic_grid import grid_to_dynamic, dynamic_to_grid
 from martin98 import dynamic_shaping
 
 # Create epsilon plane
 simulation_size = (100,100)
 
 # Circle in middle
-step_size = 10  #meters
+step_size = 5  #meters
 circle_diameter = 50 #meters
 circle_permittivity = 4.7 #relative (glass)
 epsilon_circle = plane_with_circle(simulation_size, step_size, circle_diameter, circle_permittivity)
@@ -67,13 +66,14 @@ simparams['location_sizes'] = location_sizes
 
 start_dynamic = timer()
 E_grid = dynamic_shaping(simparams)
+E_grid = E_grid.T
 end_dynamic = timer()
 print("Solution found with dynamic algorithm in {} seconds".format(end_dynamic-start_dynamic))
 
 # Show the calculated E field
-show_plane(np.absolute(E_grid.T), step_size, title="E field calculated with dynamic algorithm")
+show_plane(np.absolute(E_grid), step_size, title="E field calculated with dynamic algorithm")
 
-
+#REFERENCE STATIC GRID
 # TEcil expects different simparams, so create new dictionary
 xmin = -simulation_size[0]*step_size/2
 xmax = simulation_size[0]*step_size/2
@@ -96,14 +96,15 @@ _, _, E_fieldval, E_inval = Analytical_2D_TE(simparams)
 end_analytical = timer()
 print("Analytical solution found in {} seconds".format(end_analytical-start_analytical))
 
-#Update dictionary for dynamic grid
-x=np.zeros(len(locations))
-for j in range(len(locations)):
-    x[j]=locations[j][0]
-simparams['evaluation_points_x']
-
 # Show the validation E field
 show_plane(np.absolute(E_fieldval), step_size, title="E field of analytical solution")
+
+#REFERENCE DYNAMIC GRID
+loc_val, loc_size_val, E_val_dyn1 = grid_to_dynamic(E_fieldval, step_size, max_size, size_limits)
+E_fieldval_dyn = dynamic_to_grid(loc_val,E_val_dyn1,loc_size_val,simulation_size,step_size)
+
+# Show the validation E field
+show_plane(np.absolute(E_fieldval_dyn), step_size, title="E field of analytical solution")
 
 #ERROR CALCULATION
 # Calculate difference in magnitude between implementation and validation
@@ -116,19 +117,12 @@ E_error_abs, E_error_norm = energybased_error(E_fieldval,E_field)
 # Plot the error
 show_plane(E_error, step_size, title="Error between analytical and static algorithm")
 
-# Calculate difference in magnitude between dynamic implementation and validation
-E_difference_grid = np.abs(E_fieldval) - np.abs(E_grid)
+# Calculate difference in magnitude between implementation and validation
+E_difference_grid = np.abs(E_fieldval_dyn) - np.abs(E_grid)
 # Get the error between analytical and algorithm in percentage
-E_griderror = np.abs(E_difference_grid/np.abs(E_fieldval) * 100)
+E_griderror = np.abs(E_difference_grid/np.abs(E_fieldval_dyn) * 100)
 
-E_griderror_abs, E_griderror_norm = energybased_error(E_fieldval,E_grid)
+E_griderror_abs, E_griderror_norm = energybased_error(E_fieldval_dyn,E_grid)
 
 # Plot the error
 show_plane(E_griderror, step_size, title="Error between analytical and algorithm")
-
-# # Plot the incident plane waves
-# show_plane(np.real(E_inval), step_size, title='Incident field (analytical)\nfor 'r'$\theta_i$ = %i' %theta_i)
-
-# E_0 = np.sqrt(mu_0/epsilon_0) # Amplitude of incident wave
-# E_incident = create_planewave(simulation_size, step_size, E_0, wavelength, input_angle, 1, 'plane')
-# show_plane(np.real(E_incident), step_size, title='Incident field (algorithm, plane wave)\nfor 'r'$\theta_i$ = %i' %theta_i)
