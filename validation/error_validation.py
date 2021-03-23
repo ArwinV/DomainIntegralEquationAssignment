@@ -8,7 +8,7 @@ from helpers.validation import validation_cilinder
 import numpy as np
 import matplotlib.pyplot as plt
 
-sample = [*range(52,53,4)]
+sample = [*range(40,151,4)]
 totalsize = 500
 
 step = np.divide(totalsize,sample)
@@ -22,11 +22,12 @@ errornorm = [0]*np.size(step)
 time = [0]*np.size(step)
 errormax = [0]*np.size(step)
 
-grids = ('static', 'dynamic')
+#grids = ('static', 'dynamic')
+grids = 'static'
 
 
 for k in range(np.size(grids)):
-    grid = grids[k]
+    grid = grids
     for i in range(np.size(step)):
         simulation_size = simsize[i]
         print(simulation_size)
@@ -36,22 +37,21 @@ for k in range(np.size(grids)):
         time[i] = algorithm_time
         errormax[i] = E_error_max
         
-    plt.figure()
-    plt.plot(step,errornorm ,label='l2-norm')
-    #plt.plot(step,errormax,label='l$\infty$-norm') #Turn on if maximum error is desired
-    plt.grid(True)
-    plt.title('Error progression for decreasing step size')
-    #plt.xscale('log')
-    plt.xlabel('Step size [m]')
-    plt.ylabel('Error %')
-    plt.legend()
+    # plt.figure()
+    # plt.plot(relstep,errornorm ,label='l2-norm')
+    # #plt.plot(step,errormax,label='l$\infty$-norm') #Turn on if maximum error is desired
+    # plt.grid(True)
+    # plt.title('Error progression for decreasing step size')
+    # #plt.xscale('log')
+    # plt.xlabel('Step size / cilinder diameter')
+    # plt.ylabel('l2-Error %')
+    # plt.legend()
     
-    plt.figure()
-    plt.plot(errornorm,time)
-    plt.grid(True)
-    plt.title('Computation time necessary to achieve certain error')
-    plt.yscale('log')
-    plt.xlabel('l2-Error %')
-    plt.ylabel('Time [s]')
+    # plt.figure()
+    # plt.plot(errornorm,time)
+    # plt.grid(True)
+    # plt.title('Computation time necessary to achieve certain error')
+    # #plt.xscale('log')
+    # plt.xlabel('l2-Error %')
+    # plt.ylabel('Time [s]')
     
-    plt.show()
