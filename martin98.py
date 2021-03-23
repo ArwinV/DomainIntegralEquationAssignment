@@ -30,23 +30,27 @@ def dynamic_shaping(simparams):
     location_sizes = simparams['location_sizes']
     plane_size = simparams['simulation_size']
         # array containing number of evaluation points in x,y-directions
-    
+    farfield_samples = simparams['farfield_samples']
+        #Amount of farfield samples present
     # Convert back to test
-    epsilon_grid = dynamic_to_grid(locations, permittivity, location_sizes, plane_size, step_size)
+    epsilon_grid = dynamic_to_grid(locations, permittivity, location_sizes, plane_size, step_size, farfield_samples)
 
     # Calculate incident wave on locations
     E_0 = np.sqrt(mu_0/epsilon_0) # Amplitude of incident wave
     E_incident = create_planewave_dynamic(locations, E_0, wavelength, input_angle)
 
     # Convert to grid again
-    E_incident_grid = dynamic_to_grid(locations, E_incident, location_sizes, plane_size, step_size)
+    E_incident_grid = dynamic_to_grid(locations, E_incident, location_sizes, plane_size, step_size,farfield_samples)
 
     # Calculate scattering
     E = martin98(locations, E_incident, permittivity, location_sizes, wavelength, step_size)
-
+    #Taking out farfield samples
+    E_ff = E[len(E)-farfield_samples:len(E)]  
+    # E_ff = E_ff/E_0 #TODO Check if this should be added or not, same for 1/r
+    E = E[0:len(E)-farfield_samples]
     # Convert result to grid
-    E_grid = dynamic_to_grid(locations, E, location_sizes, plane_size, step_size)
-    return E_grid
+    E_grid = dynamic_to_grid(locations, E, location_sizes, plane_size, step_size, farfield_samples)
+    return E_grid, E_ff
 
 def martin98(locations, E_incident, permittivity, location_sizes, wavelength, step_size):
     """
