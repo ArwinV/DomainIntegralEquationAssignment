@@ -33,7 +33,6 @@ def dynamic_shaping(simparams):
     
     # Convert back to test
     epsilon_grid = dynamic_to_grid(locations, permittivity, location_sizes, plane_size, step_size)
-    show_plane(np.real(epsilon_grid), step_size)
 
     # Calculate incident wave on locations
     E_0 = np.sqrt(mu_0/epsilon_0) # Amplitude of incident wave
@@ -41,7 +40,6 @@ def dynamic_shaping(simparams):
 
     # Convert to grid again
     E_incident_grid = dynamic_to_grid(locations, E_incident, location_sizes, plane_size, step_size)
-    show_plane(np.real(E_incident_grid.T), step_size)
 
     # Calculate scattering
     E = martin98(locations, E_incident, permittivity, location_sizes, wavelength, step_size)
