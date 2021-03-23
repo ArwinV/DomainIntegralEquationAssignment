@@ -162,8 +162,6 @@ def dynamic_to_grid(locations, val_dynamic, location_sizes, planesize, grid_dist
         2D array of size planesize with values at each coordinate.
 
     """
-    # TODO: Fix bug where this function does not work when a grid_distance
-    # other than 1 is used.
     val_grid = np.zeros(planesize, complex)
     # Loop over coordinates
     for l_index in range(np.shape(locations)[0]):
