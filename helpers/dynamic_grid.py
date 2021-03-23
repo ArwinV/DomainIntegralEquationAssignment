@@ -173,7 +173,7 @@ def dynamic_to_grid(locations, val_dynamic, location_sizes, planesize, grid_dist
         # Add value to array
         for x in np.linspace(l[0]-(l_s)/2, l[0]+(l_s)/2, int(l_s), endpoint=False):
             for y in np.linspace(l[1]-(l_s)/2, l[1]+(l_s)/2, int(l_s), endpoint=False):
-                val_grid[int(x)][int(y)] = val_dynamic[l_index]
+                val_grid[int(round(x))][int(round(y))] = val_dynamic[l_index]
     return val_grid
             
         
