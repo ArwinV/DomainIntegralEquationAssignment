@@ -17,11 +17,11 @@ from helpers.dynamic_grid import grid_to_dynamic, dynamic_to_grid
 from martin98 import dynamic_shaping
 
 # Create epsilon plane
-simulation_size = (100,100)
+simulation_size = (80,80)
 
 # Circle in middle
-step_size = 5  #meters
-circle_diameter = 50 #meters
+step_size = 250/simulation_size[0]  #meters
+circle_diameter = 25 #meters
 circle_permittivity = 4.7 #relative (glass)
 epsilon_circle = plane_with_circle(simulation_size, step_size, circle_diameter, circle_permittivity)
 
@@ -31,7 +31,7 @@ show_plane(epsilon_circle, step_size, title="Plane on which the field is inciden
 # Define input wave properties
 frequency = 1e6
 wavelength = speed_of_light/frequency
-theta_i = 120;
+theta_i = 90;
 input_angle = theta_i*np.pi/180
 
 #STATIC GRID
@@ -54,24 +54,24 @@ print("Solution found with algorithm in {} seconds".format(end_algorithm-start_a
 # Show the calculated E field
 show_plane(np.absolute(E_field), step_size, title="E field calculated with algorithm")
 
-#DYNAMIC GRID
-# Define dynamic grid properties
-max_size = 4
-size_limits = [0, 200, 400]
-locations, location_sizes, epsilon = grid_to_dynamic(epsilon_circle, step_size, max_size, size_limits)
+# #DYNAMIC GRID
+# # Define dynamic grid properties
+# max_size = 4
+# size_limits = [0, 200, 400]
+# locations, location_sizes, epsilon = grid_to_dynamic(epsilon_circle, step_size, max_size, size_limits)
 
-simparams['relative_permittivity'] = epsilon
-simparams['locations'] = locations
-simparams['location_sizes'] = location_sizes
+# simparams['relative_permittivity'] = epsilon
+# simparams['locations'] = locations
+# simparams['location_sizes'] = location_sizes
 
-start_dynamic = timer()
-E_grid = dynamic_shaping(simparams)
-E_grid = E_grid.T
-end_dynamic = timer()
-print("Solution found with dynamic algorithm in {} seconds".format(end_dynamic-start_dynamic))
+# start_dynamic = timer()
+# E_grid = dynamic_shaping(simparams)
+# E_grid = E_grid.T
+# end_dynamic = timer()
+# print("Solution found with dynamic algorithm in {} seconds".format(end_dynamic-start_dynamic))
 
-# Show the calculated E field
-show_plane(np.absolute(E_grid), step_size, title="E field calculated with dynamic algorithm")
+# # Show the calculated E field
+# show_plane(np.absolute(E_grid), step_size, title="E field calculated with dynamic algorithm")
 
 #REFERENCE STATIC GRID
 # TEcil expects different simparams, so create new dictionary
@@ -99,12 +99,12 @@ print("Analytical solution found in {} seconds".format(end_analytical-start_anal
 # Show the validation E field
 show_plane(np.absolute(E_fieldval), step_size, title="E field of analytical solution")
 
-#REFERENCE DYNAMIC GRID
-loc_val, loc_size_val, E_val_dyn1 = grid_to_dynamic(E_fieldval, step_size, max_size, size_limits)
-E_fieldval_dyn = dynamic_to_grid(loc_val,E_val_dyn1,loc_size_val,simulation_size,step_size)
+# #REFERENCE DYNAMIC GRID
+# loc_val, loc_size_val, E_val_dyn1 = grid_to_dynamic(E_fieldval, step_size, max_size, size_limits)
+# E_fieldval_dyn = dynamic_to_grid(loc_val,E_val_dyn1,loc_size_val,simulation_size,step_size)
 
-# Show the validation E field
-show_plane(np.absolute(E_fieldval_dyn), step_size, title="E field of analytical solution")
+# # Show the validation E field
+# show_plane(np.absolute(E_fieldval_dyn), step_size, title="E field of analytical solution")
 
 #ERROR CALCULATION
 # Calculate difference in magnitude between implementation and validation
@@ -117,12 +117,12 @@ E_error_abs, E_error_norm = energybased_error(E_fieldval,E_field)
 # Plot the error
 show_plane(E_error, step_size, title="Error between analytical and static algorithm")
 
-# Calculate difference in magnitude between implementation and validation
-E_difference_grid = np.abs(E_fieldval_dyn) - np.abs(E_grid)
-# Get the error between analytical and algorithm in percentage
-E_griderror = np.abs(E_difference_grid/np.abs(E_fieldval_dyn) * 100)
+# # Calculate difference in magnitude between implementation and validation
+# E_difference_grid = np.abs(E_fieldval_dyn) - np.abs(E_grid)
+# # Get the error between analytical and algorithm in percentage
+# E_griderror = np.abs(E_difference_grid)/np.abs(E_fieldval_dyn) * 100
 
-E_griderror_abs, E_griderror_norm = energybased_error(E_fieldval_dyn,E_grid)
+# E_griderror_abs, E_griderror_norm = energybased_error(E_fieldval_dyn,E_grid)
 
-# Plot the error
-show_plane(E_griderror, step_size, title="Error between analytical and algorithm")
+# # Plot the error
+# show_plane(E_griderror, step_size, title="Error between analytical and algorithm")
