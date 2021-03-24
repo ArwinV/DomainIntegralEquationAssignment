@@ -37,21 +37,24 @@ for k in range(np.size(grids)):
         time[i] = algorithm_time
         errormax[i] = E_error_max
         
-    # plt.figure()
-    # plt.plot(relstep,errornorm ,label='l2-norm')
-    # #plt.plot(step,errormax,label='l$\infty$-norm') #Turn on if maximum error is desired
-    # plt.grid(True)
-    # plt.title('Error progression for decreasing step size')
-    # #plt.xscale('log')
-    # plt.xlabel('Step size / cilinder diameter')
-    # plt.ylabel('l2-Error %')
-    # plt.legend()
+    plt.figure()
+    plt.plot(relstep,errornorm)
+    plt.scatter(relstep,errornorm, color='c', label='l2-norm')
+    plt.plot(relstep,errormax) #Turn on if maximum error is desired
+    plt.scatter(relstep,errormax, color='gold', label='l$\infty$-norm')
+    plt.grid(True)
+    plt.title('Error progression for decreasing step size, d/$\lambda$=1/6')
+    #plt.xscale('log')
+    plt.xlabel('Step size / d')
+    plt.ylabel('l2-Error %')
+    plt.legend()
     
-    # plt.figure()
-    # plt.plot(errornorm,time)
-    # plt.grid(True)
-    # plt.title('Computation time necessary to achieve certain error')
-    # #plt.xscale('log')
-    # plt.xlabel('l2-Error %')
-    # plt.ylabel('Time [s]')
+    plt.figure()
+    plt.plot(sample,time)
+    plt.scatter(sample,time, color='c')
+    plt.grid(True)
+    plt.title('Computation time necessary for certain simulation size')
+    plt.yscale('log')
+    plt.xlabel('Simulation size in x- and y-direction')
+    plt.ylabel('Time [s]')
     
