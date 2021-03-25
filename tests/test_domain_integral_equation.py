@@ -4,6 +4,12 @@
 Created on Mon Feb 15 15:37:58 2021
 
 @author: Arwin
+
+This script can be used to generate results via the Domain Integral 
+Equation algorithm. All inputs to the function can be changed as desired.
+As an example, a relative permittivity matrix is calculated to define a 
+cilinder test object. 
+Output array E_field and field visualization plot
 """
 import numpy as np
 from scipy.constants import speed_of_light
@@ -11,22 +17,25 @@ from helpers.create_testobject import plane_with_circle, plane_with_guide
 from helpers.visualize import show_plane
 from domain_integral_equation import domain_integral_equation
 
-# Create epsilon plane
-simulation_size = (50,50)
+# Setup simulation
+simulation_size = (50,50) #number of samples in x- and y-direction, respectively
+step_size = 5  #meters
 
-# Circle in middle
-step_size = 0.05  #meters
-circle_diameter = 0.7 #meters
-circle_permittivity = 20 #relative
+# Define input wave properties
+frequency = 1e6 #Hz
+input_angle = 45*np.pi/180 #radians
+
+# Define circle in middle of grid as test object
+circle_diameter = 25 #meters
+circle_permittivity = 4.7 #relative
 epsilon = plane_with_circle(simulation_size, step_size, circle_diameter, circle_permittivity)
 
 # Show plane
 show_plane(epsilon, step_size)
 
-# Define input wave properties
-frequency = 1e9
-wavelength = speed_of_light/frequency
-input_angle = 120*np.pi/180
+#Calculation of wavelength from user defined frequency
+wavelength = speed_of_light/frequency #meters
+wvl = 3e8/frequency; #Rounded wavelength in meters
 
 #Store necessary variables into dictionary for E-field computation
 simparams = {
@@ -42,4 +51,4 @@ simparams = {
 E_field = domain_integral_equation(simparams)
 
 # Show the calculated E field
-show_plane(np.absolute(E_field), step_size)
+show_plane(np.absolute(E_field), step_size, title="E field calculated with algorithm for d/$\lambda$ = 1/{}".format(int(wvl/circle_diameter)))
