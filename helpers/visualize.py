@@ -33,7 +33,9 @@ def show_plane(plane, grid_distance, title=""):
     plt.ylabel("Y [m]")
     plt.title(title)
     plt.grid(b=True)
-    plt.colorbar()
+    cbar = plt.colorbar()
+    #plt.clim(0,750)
+    cbar.set_label('E-field magnitude [V/m]', rotation=270, labelpad=10)
     
 def show_plane_ff(E_ff, loc_ff, title=""):
     """
