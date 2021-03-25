@@ -8,7 +8,7 @@ Created on Mon Feb 15 10:41:14 2021
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 
-def show_plane(plane, grid_distance, title=""):
+def show_plane(plane, grid_distance,title="",plottype=''):
     """
     Plot the 2D plane
 
@@ -34,8 +34,13 @@ def show_plane(plane, grid_distance, title=""):
     plt.title(title)
     plt.grid(b=True)
     cbar = plt.colorbar()
-    #plt.clim(0,750)
-    cbar.set_label('E-field magnitude [V/m]', rotation=270, labelpad=10)
+    if plottype == 'fieldnorm':
+        plt.clim(0,750)
+        cbar.set_label('E-field magnitude [V/m]', rotation=270, labelpad=10)
+    elif plottype == 'field':
+        cbar.set_label('E-field magnitude [V/m]', rotation=270, labelpad=10)
+    elif plottype == 'epsilon':
+        cbar.set_label('Relative permittivity $\epsilon$', rotation=270, labelpad=12)
     
 def show_plane_ff(E_ff, loc_ff, title=""):
     """

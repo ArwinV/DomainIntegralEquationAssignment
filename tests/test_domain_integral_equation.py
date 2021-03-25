@@ -31,7 +31,7 @@ circle_permittivity = 4.7 #relative
 epsilon = plane_with_circle(simulation_size, step_size, circle_diameter, circle_permittivity)
 
 # Show plane
-show_plane(epsilon, step_size)
+show_plane(epsilon, step_size,'','epsilon')
 
 #Calculation of wavelength from user defined frequency
 wavelength = speed_of_light/frequency #meters
@@ -51,4 +51,4 @@ simparams = {
 E_field = domain_integral_equation(simparams)
 
 # Show the calculated E field
-show_plane(np.absolute(E_field), step_size, title="E field calculated with algorithm for d/$\lambda$ = 1/{}".format(int(wvl/circle_diameter)))
+show_plane(np.absolute(E_field), step_size, title="E field calculated with algorithm for d/$\lambda$ = 1/{}".format(int(wvl/circle_diameter)),plottype='field')
