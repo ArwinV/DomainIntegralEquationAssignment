@@ -102,11 +102,13 @@ show_plane(np.absolute(E_grid), step_size, title="E field calculated with dynami
 show_plane_ff(np.absolute(E_ff), loc_ff, title="Locations farfield of algorithm solution")
 #REFERENCE STATIC GRID
 # TEcil expects different simparams, so create new dictionary
-xmin = -simulation_size[0]*step_size/2
-xmax = simulation_size[0]*step_size/2
-ymin = -simulation_size[1]*step_size/2
-ymax = simulation_size[1]*step_size/2
-xpoints,ypoints = np.meshgrid(np.linspace(xmin, xmax, simulation_size[0]), np.linspace(ymin, ymax, simulation_size[1]))
+#xmin = -simulation_size[0]*step_size/2
+#xmax = simulation_size[0]*step_size/2
+#ymin = -simulation_size[1]*step_size/2
+#ymax = simulation_size[1]*step_size/2
+#xpoints,ypoints = np.meshgrid(np.linspace(xmin, xmax, simulation_size[0]), np.linspace(ymin, ymax, simulation_size[1]))
+xpoints = locations[:,0] - simulation_size[0]*step_size/2
+ypoints = locations[:,1] - simulation_size[1]*step_size/2
 simparams = {
     'frequency': frequency,
     'radius': circle_diameter/2,
@@ -119,19 +121,20 @@ simparams = {
 
 # Compute E-field using TEcil
 start_analytical = timer()
-_, _, E_fieldval, E_inval = Analytical_2D_TE(simparams)
+_, _, E_fieldval_dyn, E_inval = Analytical_2D_TE(simparams)
 end_analytical = timer()
 print("Analytical solution found in {} seconds".format(end_analytical-start_analytical))
 
 # Show the validation E field
+E_fieldval = dynamic_to_grid(locations,E_fieldval_dyn,location_sizes,simulation_size,step_size, farfield_samples).T
 show_plane(np.absolute(E_fieldval), step_size, title="E field of analytical solution")
 
 # #REFERENCE DYNAMIC GRID
-# loc_val, loc_size_val, E_val_dyn1 = grid_to_dynamic(E_fieldval, step_size, max_size, size_limits)
-# E_fieldval_dyn = dynamic_to_grid(loc_val,E_val_dyn1,loc_size_val,simulation_size,step_size)
+loc_val, loc_size_val, E_val_dyn1 = grid_to_dynamic(E_fieldval, step_size, max_size, size_limits)
+E_fieldval_dyn = dynamic_to_grid(loc_val,E_val_dyn1,loc_size_val,simulation_size,step_size, farfield_samples)
 
 # # Show the validation E field
-# show_plane(np.absolute(E_fieldval_dyn), step_size, title="E field of analytical solution")
+show_plane(np.absolute(E_fieldval_dyn), step_size, title="E field of analytical solution")
 
 #ERROR CALCULATION
 # Calculate difference in magnitude between implementation and validation
@@ -145,11 +148,11 @@ E_error_abs, E_error_norm = energybased_error(E_fieldval,E_field)
 show_plane(E_error, step_size, title="Error between analytical and static algorithm")
 
 # # Calculate difference in magnitude between implementation and validation
-# E_difference_grid = np.abs(E_fieldval_dyn) - np.abs(E_grid)
+E_difference_grid = np.abs(E_fieldval) - np.abs(E_grid)
 # # Get the error between analytical and algorithm in percentage
-# E_griderror = np.abs(E_difference_grid)/np.abs(E_fieldval_dyn) * 100
+E_griderror = np.abs(E_difference_grid)/np.abs(E_fieldval) * 100
 
-# E_griderror_abs, E_griderror_norm = energybased_error(E_fieldval_dyn,E_grid)
+E_griderror_abs, E_griderror_norm = energybased_error(E_fieldval,E_grid)
 
 # # Plot the error
-# show_plane(E_griderror, step_size, title="Error between analytical and algorithm")
+show_plane(E_griderror, step_size, title="Error between analytical and algorithm")
