@@ -61,34 +61,26 @@ def show_plane_ff(E_ff, loc_ff, title=""):
     
     # Create a new figure and show the plane
     # Plane is transposed so the x and y values are correct
-    
     fig = plt.figure()
     x = loc_ff[:,0]
     y = loc_ff[:,1]
     z = E_ff
-    # plane = [x,y,z]
-    # ax = fig.gca(projection='2d')
-    plt.scatter(x,y, cmap  = 'b')
-    plt.xlabel("X [m]")
-    plt.ylabel("Y [m]")
-    # plt.xlim([-np.max(loc_ff), np.max(loc_ff)])
-    # plt.ylim([-np.max(loc_ff), np.max(loc_ff)])
-    plt.grid(b=True)
-    plt.title(title)
+    ax = plt.axes(projection='3d')
+    
+    my_cmap = plt.get_cmap('hot')
+    
+    trisurf = ax.plot_trisurf(x,y,z,cmap = my_cmap, edgecolor = 'grey')
+    fig.colorbar(trisurf, ax = ax, shrink = 0.5, aspect = 5)
+    ax.set_title(title)
+    
+    ax.set_xlabel('X', fontweight ='bold') 
+    ax.set_ylabel('Y', fontweight ='bold') 
+    ax.set_zlabel('Value E-field', fontweight ='bold')
+    
     plt.show()
     
-    # my_cmap = plt.get_cmap('viridis')
-    
-    # trisurf = ax.plot_trisurf(x,y,z,cmap = my_cmap, edgecolor = 'none')
-    # fig.colorbar(trisurf, ax = ax, shrink = 0.5, aspect = 5)
-    # ax.set_title(title)
-    # ax.view_init(90,0)
-    # plt.imshow(plane.T, interpolation='none', extent=[0,plane.shape[0]*grid_distance,0,plane.shape[1]*grid_distance], aspect=1) 
-
-    # plt.zlabel('Value E farfield', fontweight ='bold')
-    
-    # plt.show()
-    
+    plt.scatter(x,y,color = 'b')
+    plt.show()
     # plt.imshow(plane.T, interpolation='none' aspect=1, 'b*')
     # plt.xlabel("X [m]")
     # plt.ylabel("Y [m]")

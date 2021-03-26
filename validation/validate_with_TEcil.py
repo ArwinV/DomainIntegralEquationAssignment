@@ -8,7 +8,7 @@ Created on Fri Feb 26 14:47:14 2021
 import numpy as np
 from scipy.constants import speed_of_light
 from helpers.create_testobject import plane_with_circle, plane_with_guide
-from helpers.visualize import show_plane, show_plane_ff
+from helpers.visualize import show_plane
 from domain_integral_equation import domain_integral_equation
 from helpers.calculate_error import energybased_error
 from validation.TEcil import Analytical_2D_TE
@@ -33,7 +33,6 @@ frequency = 1e6
 wavelength = speed_of_light/frequency
 theta_i = 90;
 input_angle = theta_i*np.pi/180
-farfield_samples = 120 
 
 #STATIC GRID
 # Store necessary variables into dictionary for E-field computation
@@ -55,51 +54,25 @@ print("Solution found with algorithm in {} seconds".format(end_algorithm-start_a
 # Show the calculated E field
 show_plane(np.absolute(E_field), step_size, title="E field calculated with algorithm")
 
-#DYNAMIC GRID
-# Define dynamic grid properties
-#Calculate farfield distance
-size_circle = np.pi*0.5*circle_diameter #Approximated size of cylinder working as transmitting area, is the circumference of the cylinder
-ff_distance = 2*size_circle**2/wavelength #Distance farfield out of grip
+# #DYNAMIC GRID
+# # Define dynamic grid properties
+# max_size = 4
+# size_limits = [0, 200, 400]
+# locations, location_sizes, epsilon = grid_to_dynamic(epsilon_circle, step_size, max_size, size_limits)
 
-max_size = 4
-size_limits = [0, 200, 400]
-locations, location_sizes, epsilon = grid_to_dynamic(epsilon_circle, step_size, max_size, size_limits)
+# simparams['relative_permittivity'] = epsilon
+# simparams['locations'] = locations
+# simparams['location_sizes'] = location_sizes
 
-#Add and calculate values farfield
-loc_ff = []
+# start_dynamic = timer()
+# E_grid = dynamic_shaping(simparams)
+# E_grid = E_grid.T
+# end_dynamic = timer()
+# print("Solution found with dynamic algorithm in {} seconds".format(end_dynamic-start_dynamic))
 
-if (farfield_samples != 0):
-    # TODO: Find farfield samples
-    ff_angle = np.linspace(input_angle+np.pi/8, input_angle+np.pi*17/8-2*np.pi/farfield_samples, farfield_samples)  #Starting angle in radians 45 degrees from incident
-    for k in range(farfield_samples):
-        # y_ff = np.sin(ff_angle)*r_ff
-        # x_ff = np.cos(ff_angle)*r_ff
-        loc_ff = [np.cos(ff_angle)*ff_distance,np.sin(ff_angle)*ff_distance]
-        # loc_ff[1] = np.sin(ff_angle)*r_ff
+# # Show the calculated E field
+# show_plane(np.absolute(E_grid), step_size, title="E field calculated with dynamic algorithm")
 
-loc_ff = np.transpose(np.reshape(loc_ff,(2,farfield_samples)))
-loc_ff = loc_ff+(simulation_size[0]/2*step_size)
-# Add ff locations
-locations = np.append(locations,loc_ff,axis=0)
-
-# Add their size and permittivity
-location_sizes = np.append(location_sizes, np.ones(farfield_samples))
-epsilon = np.append(epsilon, np.ones(farfield_samples))
-
-simparams['relative_permittivity'] = epsilon
-simparams['locations'] = locations
-simparams['location_sizes'] = location_sizes
-simparams['farfield_samples'] = farfield_samples
-
-start_dynamic = timer()
-E_grid,E_ff = dynamic_shaping(simparams)
-E_grid = E_grid.T
-end_dynamic = timer()
-print("Solution found with dynamic algorithm in {} seconds".format(end_dynamic-start_dynamic))
-
-# Show the calculated E field
-show_plane(np.absolute(E_grid), step_size, title="E field calculated with dynamic algorithm")
-show_plane_ff(np.absolute(E_ff), loc_ff, title="Locations farfield of algorithm solution")
 #REFERENCE STATIC GRID
 # TEcil expects different simparams, so create new dictionary
 xmin = -simulation_size[0]*step_size/2
