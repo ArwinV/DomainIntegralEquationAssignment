@@ -8,8 +8,8 @@ from helpers.validation import validation_cilinder
 import numpy as np
 import matplotlib.pyplot as plt
 
-sample = [*range(40,151,4)]
-totalsize = 250
+sample = [*range(40,181,4)]
+totalsize = 500
 
 step = np.divide(totalsize,sample)
 simsize =  [0]*np.size(step)
@@ -23,7 +23,7 @@ time = [0]*np.size(step)
 errormax = [0]*np.size(step)
 
 #grids = ('static', 'dynamic')
-grids = 'static'
+grids = 'dynamic'
 
 
 for k in range(np.size(grids)):
@@ -40,11 +40,12 @@ for k in range(np.size(grids)):
     plt.figure()
     plt.plot(relstep,errornorm)
     plt.scatter(relstep,errornorm, color='c', label='l2-norm')
-    #plt.plot(relstep,errormax) #Turn on if maximum error is desired
+    # plt.plot(relstep,errormax) #Turn on if maximum error is desired
     #plt.scatter(relstep,errormax, color='gold', label='l$\infty$-norm')
-    plt.grid(True)
-    plt.title('Error progression for decreasing step size, d/$\lambda$=1/12')
-    #plt.xscale('log')
+    plt.grid(True, which='both')
+    plt.title('Error progression for decreasing step size dynamic grid, d/$\lambda$=1/6')
+    plt.xscale('log')
+    plt.yscale('log')
     plt.xlabel('Step size / d')
     plt.ylabel('l2-Error %')
     plt.legend()
@@ -54,6 +55,7 @@ for k in range(np.size(grids)):
     plt.scatter(sample,time, color='c')
     plt.grid(True)
     plt.title('Computation time necessary for certain simulation size')
+    #plt.xscale('log')
     plt.yscale('log')
     plt.xlabel('Simulation size in x- and y-direction')
     plt.ylabel('Time [s]')
