@@ -60,7 +60,8 @@ show_plane(np.absolute(E_field), step_size, title="E field calculated with algor
 # Define dynamic grid properties
 #Calculate farfield distance
 size_circle = np.pi*0.5*circle_diameter #Approximated size of cylinder working as transmitting area, is the circumference of the cylinder
-ff_distance = 2*size_circle**2/wavelength #Distance farfield out of grip
+ff_begin = 2*size_circle**2/wavelength #Distance farfield out of grip
+ff_distance = 200 #Farfield calculated at this distance from cylinder
 
 max_size = 4
 size_limits = [0, max_size/2*circle_diameter, max_size*circle_diameter]
@@ -70,8 +71,7 @@ locations, location_sizes, epsilon = grid_to_dynamic(epsilon_circle, step_size, 
 loc_ff = []
 
 if (farfield_samples != 0):
-    # TODO: Find farfield samples
-    ff_angle = np.linspace(input_angle+np.pi/8, input_angle+np.pi*17/8-2*np.pi/farfield_samples, farfield_samples)  #Starting angle in radians 45 degrees from incident
+    ff_angle = np.linspace(0, np.pi*2-2*np.pi/farfield_samples, farfield_samples)  #Starting angle in radians 45 degrees from incident
     for k in range(farfield_samples):
         # y_ff = np.sin(ff_angle)*r_ff
         # x_ff = np.cos(ff_angle)*r_ff
@@ -94,6 +94,7 @@ simparams['farfield_samples'] = farfield_samples
 
 start_dynamic = timer()
 E_grid,E_ff = dynamic_shaping(simparams)
+E_ff = E_ff*ff_distance #Employing the 1/r dependence
 end_dynamic = timer()
 print("Solution found with dynamic algorithm in {} seconds".format(end_dynamic-start_dynamic))
 
