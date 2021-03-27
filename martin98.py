@@ -37,10 +37,11 @@ def dynamic_shaping(simparams):
 
     # Calculate incident wave on locations
     E_0 = np.sqrt(mu_0/epsilon_0) # Amplitude of incident wave
-    E_incident = create_planewave_dynamic(locations, E_0, wavelength, input_angle)
+    E_incident = create_planewave_dynamic(locations, E_0, wavelength, input_angle, plane_size, step_size)
 
     # Convert to grid again
     E_incident_grid = dynamic_to_grid(locations, E_incident, location_sizes, plane_size, step_size,farfield_samples)
+    #show_plane(np.real(E_incident_grid), step_size, title="Algorithm incident field")
 
     # Calculate scattering
     E = martin98(locations, E_incident, permittivity, location_sizes, wavelength, step_size)

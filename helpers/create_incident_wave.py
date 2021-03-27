@@ -49,7 +49,7 @@ def create_planewave(planesize, grid_distance, E_0, wavelength, incident_angle, 
     E = E_0*np.exp(1j*np.dot(rho, k_B))
     return E
 
-def create_planewave_dynamic(locations, E_0, wavelength, incident_angle, epsilon_B=1):
+def create_planewave_dynamic(locations, E_0, wavelength, incident_angle, simulation_size, step_size, epsilon_B=1):
     """
     Calculates the indident plane wave on specific locations. Used then using
     a dynamic grid.
@@ -77,6 +77,7 @@ def create_planewave_dynamic(locations, E_0, wavelength, incident_angle, epsilon
     modes = 50
     omega = 2*np.pi*speed_of_light/wavelength #2*pi*f
     k_0 = omega*np.sqrt(mu_0*epsilon_0)
+    locations = locations - np.array([simulation_size[0]*step_size/2, simulation_size[1]*step_size/2])
     r = np.linalg.norm(locations, axis=1)
     theta = []
     for l in locations:

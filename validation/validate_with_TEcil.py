@@ -17,7 +17,7 @@ from helpers.dynamic_grid import grid_to_dynamic, dynamic_to_grid
 from martin98 import dynamic_shaping
 
 # Create epsilon plane
-simulation_size = (80,80)
+simulation_size = (60,60)
 
 # Circle in middle
 step_size = 250/simulation_size[0]  #meters
@@ -31,9 +31,9 @@ show_plane(epsilon_circle, step_size, title="Plane on which the field is inciden
 # Define input wave properties
 frequency = 1e6
 wavelength = speed_of_light/frequency
-theta_i = 90;
+theta_i = 120;
 input_angle = theta_i*np.pi/180
-farfield_samples = 120 
+farfield_samples = 120
 
 #STATIC GRID
 # Store necessary variables into dictionary for E-field computation
@@ -48,7 +48,7 @@ simparams = {
 
 # Compute E-field using domain_integral_equation
 start_algorithm = timer()
-E_field = domain_integral_equation(simparams)
+E_field = domain_integral_equation(simparams).T
 end_algorithm = timer()
 print("Solution found with algorithm in {} seconds".format(end_algorithm-start_algorithm))
 
@@ -93,7 +93,6 @@ simparams['farfield_samples'] = farfield_samples
 
 start_dynamic = timer()
 E_grid,E_ff = dynamic_shaping(simparams)
-E_grid = E_grid.T
 end_dynamic = timer()
 print("Solution found with dynamic algorithm in {} seconds".format(end_dynamic-start_dynamic))
 
@@ -126,15 +125,8 @@ end_analytical = timer()
 print("Analytical solution found in {} seconds".format(end_analytical-start_analytical))
 
 # Show the validation E field
-E_fieldval = dynamic_to_grid(locations,E_fieldval_dyn,location_sizes,simulation_size,step_size, farfield_samples).T
+E_fieldval = dynamic_to_grid(locations,E_fieldval_dyn,location_sizes,simulation_size,step_size, farfield_samples)
 show_plane(np.absolute(E_fieldval), step_size, title="E field of analytical solution")
-
-# #REFERENCE DYNAMIC GRID
-loc_val, loc_size_val, E_val_dyn1 = grid_to_dynamic(E_fieldval, step_size, max_size, size_limits)
-E_fieldval_dyn = dynamic_to_grid(loc_val,E_val_dyn1,loc_size_val,simulation_size,step_size, farfield_samples)
-
-# # Show the validation E field
-show_plane(np.absolute(E_fieldval_dyn), step_size, title="E field of analytical solution")
 
 #ERROR CALCULATION
 # Calculate difference in magnitude between implementation and validation
@@ -156,3 +148,8 @@ E_griderror_abs, E_griderror_norm = energybased_error(E_fieldval,E_grid)
 
 # # Plot the error
 show_plane(E_griderror, step_size, title="Error between analytical and algorithm")
+
+# Incident wave
+#E_in = dynamic_to_grid(locations,E_inval,location_sizes,simulation_size,step_size, farfield_samples).T
+#show_plane(np.real(E_in.T), step_size, title="Validation incident field")
+
