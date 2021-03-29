@@ -44,7 +44,6 @@ simparams = {
     'wavelength': wavelength,
     'input_angle': input_angle,
     'relative_permittivity': epsilon_circle,
-    'method': 'plane'
     }
 
 # Compute E-field using domain_integral_equation
