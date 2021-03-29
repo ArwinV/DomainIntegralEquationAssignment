@@ -42,18 +42,19 @@ def show_plane(plane, grid_distance,title="",plottype=''):
     elif plottype == 'epsilon':
         cbar.set_label('Relative permittivity $\epsilon$', rotation=270, labelpad=12)
     
-def show_plane_ff(E_ff, loc_ff, title=""):
+def show_plane_ff(E_ff, loc_ff, ff_angle, ff_distance, title=""):
     """
     Plot the 2D plane
 
     Parameters
     ----------
-    plane : 2D numpy array
-        2D array with values to be plotted.
-    grid_distance : float
-        Distance in meters between every point in the plane.
-
-    Returns
+    E_ff : 2D numpy array
+        2D array with farfield values to be plotted
+    loc_ff : float
+        locations where farfield is calculated
+    ff_angle: Angles from cylinder at which farfield is calculated
+    ff_distance: distance farfield from cylinder
+    
     -------
     None.
 
@@ -77,21 +78,10 @@ def show_plane_ff(E_ff, loc_ff, title=""):
     plt.title(title)
     plt.show()
     
-    # my_cmap = plt.get_cmap('viridis')
-    
-    # trisurf = ax.plot_trisurf(x,y,z,cmap = my_cmap, edgecolor = 'none')
-    # fig.colorbar(trisurf, ax = ax, shrink = 0.5, aspect = 5)
-    # ax.set_title(title)
-    # ax.view_init(90,0)
-    # plt.imshow(plane.T, interpolation='none', extent=[0,plane.shape[0]*grid_distance,0,plane.shape[1]*grid_distance], aspect=1) 
+    plt.plot(ff_angle,z)
+    plt.xlabel("Angle from cylinder  [rad]")
+    plt.ylabel("E-field magnitude")
+    plt.title("Farfield values at %i m from cylinder[V/m]" %ff_distance)
+    plt.grid(b=True)
+    plt.show()
 
-    # plt.zlabel('Value E farfield', fontweight ='bold')
-    
-    # plt.show()
-    
-    # plt.imshow(plane.T, interpolation='none' aspect=1, 'b*')
-    # plt.xlabel("X [m]")
-    # plt.ylabel("Y [m]")
-    # plt.title(title)
-    # plt.grid(b=True)
-    # plt.colorbar()
