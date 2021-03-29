@@ -20,7 +20,7 @@ from Final.martin98 import dynamic_shaping
 Define paramaters 
 """
 # Create epsilon plane
-simulation_size = (52,52)
+simulation_size = (60,60)
 total_size = 500;
 step_size = total_size/simulation_size[0]  #meters
 
