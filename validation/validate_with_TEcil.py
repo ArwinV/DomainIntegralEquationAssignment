@@ -17,7 +17,7 @@ from helpers.dynamic_grid import grid_to_dynamic, dynamic_to_grid
 from martin98 import dynamic_shaping
 
 # Create epsilon plane
-simulation_size = (100,100)
+simulation_size = (52,52)
 total_size = 500;
 step_size = total_size/simulation_size[0]  #meters
 
@@ -166,11 +166,11 @@ E_error_abs, E_error_norm = energybased_error(E_fieldval,E_field)
 show_plane(E_error, step_size, title="Error between analytical and static algorithm")
 
 # # Calculate difference in magnitude between implementation and validation
-E_difference_grid = np.abs(E_fieldval) - np.abs(E_grid)
+E_difference_grid = np.abs(E_fieldval_dyn) - np.abs(E_grid)
 # # Get the error between analytical and algorithm in percentage
-E_griderror = np.abs(E_difference_grid)/np.abs(E_fieldval) * 100
+E_griderror = np.abs(E_difference_grid)/np.abs(E_fieldval_dyn) * 100
 
-E_griderror_abs, E_griderror_norm = energybased_error(E_fieldval,E_grid)
+E_griderror_abs, E_griderror_norm = energybased_error(E_fieldval_dyn,E_grid)
 
 # # Plot the error
 show_plane(E_griderror, step_size, title="Error between analytical and dynamic algorithm")
