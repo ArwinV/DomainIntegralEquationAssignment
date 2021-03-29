@@ -41,12 +41,14 @@ def dynamic_shaping(simparams, farfield_samples):
         #Add and calculate values farfield
         ff_distance = 200 #Farfield calculated at this distance from cylinder
     
-        ff_angle = np.linspace(0, np.pi*2-2*np.pi/farfield_samples, farfield_samples)  #Starting angle in radians 45 degrees from incident
+        ff_angle = np.linspace(0, np.pi*2-2*np.pi/farfield_samples, farfield_samples)  
         # for k in range(farfield_samples):
-        loc_ff = ([np.cos(ff_angle)*ff_distance,np.sin(ff_angle)*ff_distance])            
+        loc_ff = ([np.cos(ff_angle)*ff_distance + (simulation_size[0]/2*step_size), np.sin(ff_angle)*ff_distance + (simulation_size[1]/2*step_size)])
+        # loc_ff = ([np.cos(ff_angle)*ff_distance, np.sin(ff_angle)*ff_distance])            
         
         loc_ff = np.transpose(np.reshape(loc_ff,(2,farfield_samples)))
-        loc_ff = loc_ff+(simulation_size[0]/2*step_size) 
+        # loc_ff = loc_ff+np.sqrt(2*(simulation_size[0]/2*step_size)**2)
+        # loc_ff = loc_ff+(simulation_size[0]/2*step_size) 
             
 
         locations = np.append(locations,loc_ff,axis=0) # Add ff locations, with respective size and permittivity

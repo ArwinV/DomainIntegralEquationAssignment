@@ -7,6 +7,7 @@ Created on Mon Feb 15 10:41:14 2021
 """
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
+import numpy as np
 
 def show_plane(plane, grid_distance,title="",plottype=''):
     """
@@ -72,9 +73,10 @@ def show_plane_ff(E_ff, loc_ff, ff_angle, ff_distance, title=""):
     plt.scatter(x,y, cmap  = 'b')
     plt.xlabel("X [m]")
     plt.ylabel("Y [m]")
-    # plt.xlim([-np.max(loc_ff), np.max(loc_ff)])
-    # plt.ylim([-np.max(loc_ff), np.max(loc_ff)])
+    # plt.xlim([0, np.max(loc_ff)+np.min(loc_ff)])
+    # plt.ylim([0, np.max(loc_ff)+np.min(loc_ff)])
     plt.grid(b=True)
+    plt.gca().set_aspect("equal")
     plt.title(title)
     plt.show()
     
