@@ -3,6 +3,15 @@
 Created on Fri Feb 26 14:47:14 2021
 
 @author: Wendy
+
+Function that is called by error_validation.py and compares algorithmic solution
+to analytical solution of scattered field from a cylinder.
+Frequency and incident angle of plane wave are predefined.
+No validation is performed for far-field samples.
+
+Inputs: simulation settings defined by user.
+Outputs: l2-error norm, computation time, maximum error (all integers)
+for given settings.
 """
 
 import numpy as np
@@ -17,13 +26,14 @@ from martin98 import dynamic_shaping
 
 def validation_cylinder(step_size,simulation_size,circle_diameter,grid='static',circle_permittivity=4.7):
     
+    # Generate relative permittivity matrix for desired cylinder grid
     epsilon = plane_with_circle(simulation_size, step_size, circle_diameter, circle_permittivity)
     
     # Define input wave properties
-    frequency = 1e6
-    wavelength = speed_of_light/frequency
-    theta_i = 45;
-    input_angle = theta_i*np.pi/180
+    frequency = 1e6 #Hz
+    wavelength = speed_of_light/frequency #Vacuum background permittivity is assumed
+    theta_i = 45; #degrees
+    input_angle = theta_i*np.pi/180 #Convert to radians
     
     # Store necessary variables into dictionary for E-field computation
     simparams = {
@@ -33,6 +43,8 @@ def validation_cylinder(step_size,simulation_size,circle_diameter,grid='static',
         'input_angle': input_angle,
         'relative_permittivity': epsilon,
         }
+    
+    #TODO convert into one function 
     if grid == 'static':
         # Compute E-field using domain_integral_equation
         start_algorithm = timer()
@@ -98,7 +110,8 @@ def validation_cylinder(step_size,simulation_size,circle_diameter,grid='static',
     # Get the error between analytical and algorithm in percentage
     E_error = np.abs(E_difference)/np.abs(E_fieldval) * 100
     
-    E_error_abs, E_error_norm = energybased_error(E_fieldval,E_field)
+    # Obtain error metrics for the overall result
+    E_error_norm = energybased_error(E_fieldval,E_field)
     E_error_max = np.amax(E_error)
     
     return E_error_norm, algorithm_time, E_error_max

@@ -3,6 +3,11 @@
 Created on Mon Mar 15 11:42:46 2021
 
 @author: Wendy
+
+Script designed to gain insight into error progression and computation time for
+different simulation sizes.
+First lines can be adapted to the wishes of the user.
+Script outputs two graphs related to error progression and computation time.
 """
 from helpers.validation import validation_cylinder
 import numpy as np

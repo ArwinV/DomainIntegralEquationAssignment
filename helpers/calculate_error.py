@@ -13,5 +13,5 @@ def energybased_error(Eref,Esim):
     norm = np.linalg.norm(E,2)
     normref = np.linalg.norm(Eref,2)
     error = norm/normref*100 #error in percentages
-    return norm, error
+    return error
 
