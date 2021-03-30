@@ -15,7 +15,7 @@ from timeit import default_timer as timer
 from helpers.dynamic_grid import grid_to_dynamic, dynamic_to_grid
 from martin98 import dynamic_shaping
 
-def validation_cilinder(step_size,simulation_size,circle_diameter,grid='static',circle_permittivity=4.7,farfield_samples=0):
+def validation_cylinder(step_size,simulation_size,circle_diameter,grid='static',circle_permittivity=4.7):
     
     epsilon = plane_with_circle(simulation_size, step_size, circle_diameter, circle_permittivity)
     
@@ -32,8 +32,6 @@ def validation_cilinder(step_size,simulation_size,circle_diameter,grid='static',
         'wavelength': wavelength,
         'input_angle': input_angle,
         'relative_permittivity': epsilon,
-        'method': 'plane',
-        'farfield_samples': farfield_samples
         }
     if grid == 'static':
         # Compute E-field using domain_integral_equation
@@ -61,6 +59,7 @@ def validation_cilinder(step_size,simulation_size,circle_diameter,grid='static',
         _, _, E_fieldval, E_inval = Analytical_2D_TE(simparams)
         
     elif grid == 'dynamic':
+        farfield_samples = 0
         max_size = 4
         size_limits = [0, max_size/2*circle_diameter, max_size*circle_diameter]
         locations, location_sizes, epsilon = grid_to_dynamic(epsilon, step_size, max_size, size_limits)
@@ -68,6 +67,7 @@ def validation_cilinder(step_size,simulation_size,circle_diameter,grid='static',
         simparams['relative_permittivity'] = epsilon
         simparams['locations'] = locations
         simparams['location_sizes'] = location_sizes
+        simparams['farfield_samples'] = farfield_samples
 
         start_dynamic = timer()
         E_field, _ = dynamic_shaping(simparams)
