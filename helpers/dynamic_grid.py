@@ -9,17 +9,17 @@ Created on Wed Mar 17 09:06:23 2021
 import numpy as np
 
 
-def grid_to_dynamic(epsilon, grid_distance, max_size, size_limits):
+def grid_to_dynamic(values, grid_distance, max_size, size_limits):
     """
     Converts a grid to vectors that describe dynamic sizes. Points further away
     form the center will be bigger.
 
     Parameters
     ----------
-    epsilon : 2D numpy array
-        Array that contains the permittivity of the plane.
+    values : 2D numpy array
+        Array that contains values on a rectangular plane.
     grid_distance : float
-        Distance in meters between all samples in epsilon.
+        Distance in meters between all samples in the plan.
     max_size : int
         A power of 2. Describes the maximum size of the sampled squares.
     size_limits : array
@@ -32,14 +32,14 @@ def grid_to_dynamic(epsilon, grid_distance, max_size, size_limits):
         Array with locations.
     location_sizee_dynamic: numpy array
         Array indicating the size of each sample at a coordinate.
-    epsilon_dynamic: numpy array
-        Array with epsilon values for each location
+    values_dynamic: numpy array
+        Array with values for each location
 
     """
 
     # Find middle
-    xsize = np.shape(epsilon)[0]
-    ysize = np.shape(epsilon)[1]
+    xsize = np.shape(values)[0]
+    ysize = np.shape(values)[1]
     # Throw error if size of grid is wrong
     if xsize % max_size != 0 or ysize % max_size != 0:
         raise Exception("Error, grid size is not a multiple of max_size ({})".format(max_size))
@@ -52,8 +52,8 @@ def grid_to_dynamic(epsilon, grid_distance, max_size, size_limits):
         for y in np.linspace(max_size/2*grid_distance, (ysize-max_size/2)*grid_distance, int(ysize/max_size)):
             locations_dynamic, location_size_dynamic = add_locations(np.array([x, y]), max_size, locations_dynamic, location_size_dynamic, size_limits, grid_distance, coord_middle)
     # Calculate permitivity values
-    epsilon_dynamic = calculate_average_epsilon(epsilon, locations_dynamic, location_size_dynamic, grid_distance)
-    return np.array(locations_dynamic), np.array(location_size_dynamic), np.array(epsilon_dynamic)
+    values_dynamic = calculate_average_value(values, locations_dynamic, location_size_dynamic, grid_distance)
+    return np.array(locations_dynamic), np.array(location_size_dynamic), np.array(values_dynamic)
     
 def add_locations(location, location_size, locations_dynamic, location_size_dynamic, size_limits, grid_distance, center):
     """
@@ -102,7 +102,7 @@ def add_locations(location, location_size, locations_dynamic, location_size_dyna
                 locations_dynamic, location_size_dynamic = add_locations(np.array([x, y]), location_size/2, locations_dynamic, location_size_dynamic, size_limits, grid_distance, center)
     return locations_dynamic, location_size_dynamic
 
-def calculate_average_epsilon(epsilon, locations, location_sizes, grid_distance):
+def calculate_average_value(values, locations, location_sizes, grid_distance):
     """
     Calculates average of permittivity values.
 
@@ -124,20 +124,20 @@ def calculate_average_epsilon(epsilon, locations, location_sizes, grid_distance)
 
     """
     # Create new dynamic epsilon array
-    epsilon_dynamic = []
+    values_dynamic = []
     # Loop over coordinates
     for l_index in range(np.shape(locations)[0]):
         # Current location and location size
         l = locations[l_index]
         l_s = location_sizes[l_index]
         # Calculate average of epsilon samples in square
-        eps_avg = 0
+        val_avg = 0
         for x in np.linspace(l[0]-(l_s-1)/2, l[0]+(l_s-1)/2, int(l_s)):
             for y in np.linspace(l[1]-(l_s-1)/2, l[1]+(l_s-1)/2, int(l_s)):
-                eps_avg += epsilon[int(x/grid_distance)][int(y/grid_distance)]
-        eps_avg /= l_s**2
-        epsilon_dynamic.append(eps_avg)
-    return epsilon_dynamic
+                val_avg += values[int(x/grid_distance)][int(y/grid_distance)]
+        val_avg /= l_s**2
+        values_dynamic.append(val_avg)
+    return values_dynamic
                     
 def dynamic_to_grid(locations, val_dynamic, location_sizes, planesize, grid_distance):
     """
