@@ -74,7 +74,7 @@ def validation_cylinder(step_size,simulation_size,circle_diameter,grid='static',
         farfield_samples = 0
         max_size = 4
         size_limits = [0, max_size/2*circle_diameter, max_size*circle_diameter]
-        locations, location_sizes, epsilon = grid_to_dynamic(epsilon, step_size, max_size, size_limits)
+        locations, location_sizes, epsilon = grid_to_dynamic(epsilon, step_size, size_limits)
         
         simparams['relative_permittivity'] = epsilon
         simparams['locations'] = locations

@@ -78,7 +78,7 @@ Calculation and plotting of E-field with a dynamic grid
 # Define dynamic grid properties
 max_size = 4
 size_limits = [0, max_size/2*circle_diameter, max_size*circle_diameter]
-locations, location_sizes, epsilon = grid_to_dynamic(epsilon_circle, step_size, max_size, size_limits)
+locations, location_sizes, epsilon = grid_to_dynamic(epsilon_circle, step_size, size_limits)
 
 size_circle = np.pi*0.5*circle_diameter #Approximated size of cylinder working as transmitting area, is the circumference of the cylinder
 ff_begin = 2*size_circle**2/wavelength #Distance farfield out of grip
@@ -145,7 +145,7 @@ Reference code for the dynamic grid
 """
 #REFERENCE DYNAMIC GRID
 # TEcil expects different simparams, so create new dictionary
-locations, location_sizes, epsilon = grid_to_dynamic(epsilon_circle, step_size, max_size, size_limits)
+locations, location_sizes, epsilon = grid_to_dynamic(epsilon_circle, step_size, size_limits)
 xpoints = locations[:,0] - simulation_size[0]*step_size/2
 ypoints = locations[:,1] - simulation_size[1]*step_size/2
 simparams = {

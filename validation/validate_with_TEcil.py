@@ -64,7 +64,7 @@ ff_distance = 200 #Farfield calculated at this distance from cylinder
 
 max_size = 4
 size_limits = [0, max_size/2*circle_diameter, max_size*circle_diameter]
-locations, location_sizes, epsilon = grid_to_dynamic(epsilon_circle, step_size, max_size, size_limits)
+locations, location_sizes, epsilon = grid_to_dynamic(epsilon_circle, step_size, size_limits)
 
 #Add and calculate values farfield
 loc_ff = []
