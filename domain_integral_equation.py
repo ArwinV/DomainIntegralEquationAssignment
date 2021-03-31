@@ -62,13 +62,13 @@ def domain_integral_equation(simparams):
     
     # Extract farfield samples
     if farfield_samples != 0:
-        E_ff = E[-farfield_samples-1:]
-        E = E[:-farfield_samples-1]
+        E_ff = E[-farfield_samples:]
+        E = E[:-farfield_samples]
         E_ff = E_ff/E_0*ff_distance #Cancelling the 1/r dependence
     else:
         E_ff = []
 
     # Convert result to grid again
-    E_grid = dynamic_to_grid(locations[:len(E)-farfield_samples], E, location_sizes[:len(E)-farfield_samples], simulation_size, step_size)
+    E_grid = dynamic_to_grid(locations[:len(E)], E, location_sizes[:len(E)], simulation_size, step_size)
 
     return E_grid, E_ff
