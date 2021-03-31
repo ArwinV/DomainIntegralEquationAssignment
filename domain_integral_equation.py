@@ -34,7 +34,7 @@ def domain_integral_equation(simparams):
     
     # Prepare inputs for dynamic sampling distances
     if dynamic_sample_distance:
-        locations, location_sizes, permittivity = grid_to_dynamic(permittivity, step_size, max_size, size_limits)
+        locations, location_sizes, permittivity = grid_to_dynamic(permittivity, step_size, size_limits)
     else:
         locations = np.array(list(np.ndindex(simulation_size[0],simulation_size[1])))*step_size+0.5
         location_sizes = np.ones(np.shape(locations)[0])

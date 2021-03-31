@@ -9,7 +9,7 @@ Created on Wed Mar 17 09:06:23 2021
 import numpy as np
 
 
-def grid_to_dynamic(values, grid_distance, max_size, size_limits):
+def grid_to_dynamic(values, grid_distance, size_limits):
     """
     Converts a grid to vectors that describe dynamic sizes. Points further away
     form the center will be bigger.
@@ -20,8 +20,6 @@ def grid_to_dynamic(values, grid_distance, max_size, size_limits):
         Array that contains values on a rectangular plane.
     grid_distance : float
         Distance in meters between all samples in the plan.
-    max_size : int
-        A power of 2. Describes the maximum size of the sampled squares.
     size_limits : array
         Array that contains distances that describe from where on a bigger 
         sample is generated.
@@ -36,6 +34,8 @@ def grid_to_dynamic(values, grid_distance, max_size, size_limits):
         Array with values for each location
 
     """
+    # Determine maximum size the samples will get
+    max_size = 2**(len(size_limits)-1)
 
     # Find middle
     xsize = np.shape(values)[0]

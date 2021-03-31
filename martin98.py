@@ -9,10 +9,6 @@ Created on Thu Mar 18 14:25:03 2021
 import numpy as np
 from scipy.special import hankel1
 from scipy.spatial.distance import pdist, squareform
-from helpers.dynamic_grid import grid_to_dynamic, dynamic_to_grid
-from helpers.visualize import show_plane,show_plane_ff
-from scipy.constants import epsilon_0, mu_0, speed_of_light
-from helpers.create_incident_wave import create_planewave_dynamic
 
 def martin98(locations, E_incident, permittivity, location_sizes, wavelength, step_size):
     """
