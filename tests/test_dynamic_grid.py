@@ -28,7 +28,7 @@ epsilon_circle = plane_with_circle(plane_size, step_size, 10, 4.7)
 # Convert grid to dynamic
 max_size = 4
 size_limits = [0, 6, 12]
-locations, location_sizes, epsilon = grid_to_dynamic(epsilon_circle, step_size, max_size, size_limits)
+locations, location_sizes, epsilon = grid_to_dynamic(epsilon_circle, step_size, size_limits)
 
 # Convert back to test
 farfield_samples = 0
@@ -56,7 +56,7 @@ show_plane(np.real(E_incident_grid), step_size)
 # Plot locations of static grid
 max_size = 4
 size_limits = [0, 100, 1000]
-locations, location_sizes, epsilon = grid_to_dynamic(epsilon_circle, step_size, max_size, size_limits)
+locations, location_sizes, epsilon = grid_to_dynamic(epsilon_circle, step_size, size_limits)
 # Plot location points on plane
 fig = plt.figure()
 for loc in locations:

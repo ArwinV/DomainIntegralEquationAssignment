@@ -39,7 +39,7 @@ def plane_with_circle(planesize, grid_distance, diameter, epsilon_circle, epsilo
     # Determine middle of the plane
     coord_middle = np.array([(xsize-grid_distance)/2, (ysize-grid_distance)/2])
     # Loop over all coords in the plane and determine the relative permittivity
-    epsilon = np.zeros((xsamples,ysamples))
+    epsilon = np.zeros((xsamples,ysamples), complex)
     for x in range(xsamples):
         for y in range(ysamples):
             # Current coordinate

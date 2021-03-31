@@ -35,7 +35,7 @@ ff_distance = 2*size_cylinder**2/wavelength #Distance farfield out of grip
 # Convert grid to dynamic
 max_size = 4
 size_limits = [0, 200, 400]
-locations, location_sizes, epsilon = grid_to_dynamic(epsilon_circle, step_size, max_size, size_limits)
+locations, location_sizes, epsilon = grid_to_dynamic(epsilon_circle, step_size, size_limits)
 
 loc_ff = []
 
