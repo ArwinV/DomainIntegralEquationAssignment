@@ -18,16 +18,19 @@ from helpers.visualize import show_plane, show_plane_ff
 from domain_integral_equation import domain_integral_equation
 
 # Setup simulation
-simulation_size = (52,52) #number of samples in x- and y-direction, respectively
-step_size = 10  #meters
+simulation_size = (72,72) #number of samples in x- and y-direction, respectively
+step_size = 5  #meters
 
 # Define input wave properties
 frequency = 1e6 #Hz
 input_angle = 45*np.pi/180 #radians
 
+#Define number of farfield samples desired, default 0
+farfield_samples = 120
+
 # Define circle in middle of grid as test object
-circle_diameter = 25 #meters
-circle_permittivity = 4.7+1j #relative
+circle_diameter = simulation_size[0]*step_size/10 #meters
+circle_permittivity = 4.7+1j #relative, can be real or complex
 epsilon = plane_with_circle(simulation_size, step_size, circle_diameter, circle_permittivity)
 
 # Show plane
@@ -35,30 +38,30 @@ show_plane(np.real(epsilon), step_size,'','epsilon')
 
 #Calculation of wavelength from user defined frequency
 wavelength = speed_of_light/frequency #meters
+wvl = 3e8/frequency #meters, rounded wavelength
 
 #Store necessary variables into dictionary for E-field computation
-farfield_samples = 30
+max_size = 4
 simparams = {
     'simulation_size': simulation_size,
     'step_size': step_size,
     'wavelength': wavelength,
     'input_angle': input_angle,
     'relative_permittivity': epsilon,
-    'farfield_samples': farfield_samples,
     'dynamic_sample_distance': True,
-    'max_size': 4,
-    'size_limits': [0, 200, 400],
+    'max_size': max_size,
+    'size_limits': [0, max_size/2*circle_diameter, max_size*circle_diameter],
     }
 
 #Compute E-field using domain_integral_equation
-E_field, E_ff = domain_integral_equation(simparams)
+E_field, E_ff = domain_integral_equation(simparams,farfield_samples)
 
 # Show the calculated E field
-show_plane(np.absolute(E_field), step_size, title="E field calculated with algorithm for d/$\lambda$ = 1/{}".format(int(wavelength/circle_diameter)),plottype='field')
+show_plane(np.absolute(E_field), step_size, title="E field calculated with algorithm for d/$\lambda$ = 1/{}".format(int(wvl/circle_diameter)),plottype='field')
 
 if farfield_samples != 0:
     # Show the farfield samples
-    ff_distance = 200 #Farfield calculated at this distance from cylinder
+    ff_distance = 10*wvl #Farfield calculated at this distance from cylinder
     ff_angle = np.linspace(0, 2*np.pi, farfield_samples, endpoint=False) #Starting angle in radians 45 degrees from incident
     loc_ff = np.array([np.cos(ff_angle), np.sin(ff_angle)]).T*ff_distance
     loc_ff = np.array([loc_ff[:,0]+simulation_size[0]/2*step_size, loc_ff[:,1]+simulation_size[0]/2*step_size]).T #Shift locations around center of simulation plane
