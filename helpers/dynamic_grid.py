@@ -139,7 +139,7 @@ def calculate_average_epsilon(epsilon, locations, location_sizes, grid_distance)
         epsilon_dynamic.append(eps_avg)
     return epsilon_dynamic
                     
-def dynamic_to_grid(locations, val_dynamic, location_sizes, planesize, grid_distance,farfield_samples):
+def dynamic_to_grid(locations, val_dynamic, location_sizes, planesize, grid_distance):
     """
     Convert dynamic vector to a grid so it can be easily plotted.
 
@@ -166,7 +166,7 @@ def dynamic_to_grid(locations, val_dynamic, location_sizes, planesize, grid_dist
     """
     val_grid = np.zeros(planesize, complex)
     # Loop over coordinates
-    for l_index in range(np.shape(locations)[0]-farfield_samples):
+    for l_index in range(np.shape(locations)[0]):
         # Current location and location size
         l = locations[l_index]/grid_distance
         l_s = location_sizes[l_index]

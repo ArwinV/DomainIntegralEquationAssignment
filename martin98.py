@@ -14,63 +14,6 @@ from helpers.visualize import show_plane,show_plane_ff
 from scipy.constants import epsilon_0, mu_0, speed_of_light
 from helpers.create_incident_wave import create_planewave_dynamic
 
-
-def dynamic_shaping(simparams):
-    #Initialization: read parameters from dictionary
-    locations = simparams['locations']
-    wavelength = simparams['wavelength']
-        # wavelength = wavelength of incident plane wave
-    permittivity = simparams['relative_permittivity']
-        # relative_permittivity = relative permittivity at all evaluation points
-    input_angle = simparams['input_angle']
-        # input_angle = angle of incident wave, with respect to x-axis
-    step_size = simparams['step_size']
-        # step_size = physical distance between points in relative_permittivity
-    location_sizes = simparams['location_sizes']
-    plane_size = simparams['simulation_size']
-        # array containing number of evaluation points in x,y-directions
-    farfield_samples = simparams['farfield_samples']
-        #Amount of farfield samples present
-    loc_ff = []
-    if (farfield_samples != 0):
-        #Add and calculate values farfield
-        ff_distance = 200 #Farfield calculated at this distance from cylinder
-
-        ff_angle = np.linspace(0, np.pi*2-2*np.pi/farfield_samples, farfield_samples)  #Starting angle in radians 45 degrees from incident
-        loc_ff = ([np.cos(ff_angle)*ff_distance,np.sin(ff_angle)*ff_distance])
-
-        loc_ff = np.transpose(np.reshape(loc_ff,(2,farfield_samples)))
-        loc_ff = loc_ff+(plane_size[0]/2*step_size)
-        locations = np.append(locations,loc_ff,axis=0) # Add ff locations, with respective size and permittivity
-        location_sizes = np.append(location_sizes, np.ones(farfield_samples))
-        permittivity = np.append(permittivity, np.ones(farfield_samples))
-
-        # Calculate incident wave on locations
-        E_0 = np.sqrt(mu_0/epsilon_0) # Amplitude of incident wave
-        E_incident = create_planewave_dynamic(locations, E_0, wavelength, input_angle, plane_size, step_size)
-
-        # Calculate scattering
-        E = martin98(locations, E_incident, permittivity, location_sizes, wavelength, step_size)
-        # Taking out farfield samples
-        E_ff = E[len(E)-farfield_samples:len(E)]
-        E_ff = E_ff/E_0
-        E_ff = E_ff*ff_distance #Cancelling the 1/r dependence
-        E = E[0:len(E)-farfield_samples]
-        # Convert result to grid
-        E_grid = dynamic_to_grid(locations, E, location_sizes, plane_size, step_size, farfield_samples)
-        show_plane_ff(np.absolute(E_ff), loc_ff, ff_angle, ff_distance, title="Locations farfield of algorithm solution")
-    else:
-        # Calculate incident wave on locations
-        E_0 = np.sqrt(mu_0/epsilon_0) # Amplitude of incident wave
-        E_incident = create_planewave_dynamic(locations, E_0, wavelength, input_angle, plane_size, step_size)
-
-        # Calculate scattering
-        E = martin98(locations, E_incident, permittivity, location_sizes, wavelength, step_size)
-        # Convert result to grid
-        E_grid = dynamic_to_grid(locations, E, location_sizes, plane_size, step_size, farfield_samples)
-        E_ff = []
-    return E_grid, E_ff
-
 def martin98(locations, E_incident, permittivity, location_sizes, wavelength, step_size):
     """
     Basic implementation of the algorithm as proposed in [Olivier J. F. Martin
