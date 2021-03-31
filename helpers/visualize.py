@@ -22,7 +22,7 @@ def show_plane(plane, grid_distance,title="",plottype=''):
 
     Returns
     -------
-    None.
+    Plot of plane
 
     """
     
@@ -76,8 +76,8 @@ def show_plane_ff(E_ff, loc_ff, ff_angle, ff_distance, title=""):
     plt.plot(ff_angle,E_ff)
     plt.scatter(ff_angle,E_ff,color='c')
     plt.xlabel("Angle [rad]")
-    plt.ylabel("E-field magnitude [V/m]")
-    plt.title("Farfield values at %i m from cylinder" %ff_distance)
+    plt.ylabel("Normalized E-field magnitude")
+    plt.title("Normalized farfield values at %i m from cylinder" %ff_distance)
     plt.grid(b=True)
     plt.show()
 
