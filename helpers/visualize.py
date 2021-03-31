@@ -61,29 +61,23 @@ def show_plane_ff(E_ff, loc_ff, ff_angle, ff_distance, title=""):
 
     """
     
-    # Create a new figure and show the plane
-    # Plane is transposed so the x and y values are correct
+    # Create a new figure and show the graph with farfield samples
     
     fig = plt.figure()
     x = loc_ff[:,0]
     y = loc_ff[:,1]
-    z = E_ff
-    # plane = [x,y,z]
-    # ax = fig.gca(projection='2d')
     plt.scatter(x,y, cmap  = 'b')
     plt.xlabel("X [m]")
     plt.ylabel("Y [m]")
-    # plt.xlim([0, np.max(loc_ff)+np.min(loc_ff)])
-    # plt.ylim([0, np.max(loc_ff)+np.min(loc_ff)])
-    plt.grid(b=True)
     plt.gca().set_aspect("equal")
     plt.title(title)
     plt.show()
     
-    plt.plot(ff_angle,z)
-    plt.xlabel("Angle from cylinder  [rad]")
-    plt.ylabel("E-field magnitude")
-    plt.title("Farfield values at %i m from cylinder[V/m]" %ff_distance)
+    plt.plot(ff_angle,E_ff)
+    plt.scatter(ff_angle,E_ff,color='c')
+    plt.xlabel("Angle [rad]")
+    plt.ylabel("E-field magnitude [V/m]")
+    plt.title("Farfield values at %i m from cylinder" %ff_distance)
     plt.grid(b=True)
     plt.show()
 
