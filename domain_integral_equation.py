@@ -53,7 +53,6 @@ def domain_integral_equation(simparams, farfield_samples=0):
         # input_angle = angle of incident wave, with respect to x-axis
     step_size = simparams['step_size']
         # step_size = physical distance between points in relative_permittivity
-    method = simparams['method']
     
     
     #Initialization: break to prevent errors later on
@@ -67,7 +66,7 @@ def domain_integral_equation(simparams, farfield_samples=0):
     
     # Incident field
     E_0 = np.sqrt(mu_0/epsilon_0) #Amplitude of incident wave
-    E_incident = np.matrix.flatten(create_planewave(simulation_size, step_size, E_0, wavelength, input_angle, epsilon_B, method), 'C')
+    E_incident = np.matrix.flatten(create_planewave(simulation_size, step_size, E_0, wavelength, input_angle, epsilon_B), 'C')
     k_rho = 2*np.pi/wavelength*np.sqrt(epsilon_B) #Wave number of incident field
     
     #Preparation for matrix calculations
