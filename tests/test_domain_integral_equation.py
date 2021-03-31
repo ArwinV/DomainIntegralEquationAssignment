@@ -27,11 +27,11 @@ input_angle = 45*np.pi/180 #radians
 
 # Define circle in middle of grid as test object
 circle_diameter = 25 #meters
-circle_permittivity = 4.7 #relative
+circle_permittivity = 4.7+1j #relative
 epsilon = plane_with_circle(simulation_size, step_size, circle_diameter, circle_permittivity)
 
 # Show plane
-show_plane(epsilon, step_size,'','epsilon')
+show_plane(np.real(epsilon), step_size,'','epsilon')
 
 #Calculation of wavelength from user defined frequency
 wavelength = speed_of_light/frequency #meters
