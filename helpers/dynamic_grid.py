@@ -139,7 +139,7 @@ def calculate_average_value(values, locations, location_sizes, grid_distance):
         values_dynamic.append(val_avg)
     return values_dynamic
                     
-def dynamic_to_grid(locations, val_dynamic, location_sizes, planesize, grid_distance):
+def dynamic_to_grid(locations, val_dynamic, location_sizes, plane_size, grid_distance):
     """
     Convert dynamic vector to a grid so it can be easily plotted.
 
@@ -164,7 +164,7 @@ def dynamic_to_grid(locations, val_dynamic, location_sizes, planesize, grid_dist
         2D array of size planesize with values at each coordinate.
 
     """
-    val_grid = np.zeros(planesize, complex)
+    val_grid = np.zeros(plane_size, complex)
     # Loop over coordinates
     for l_index in range(np.shape(locations)[0]):
         # Current location and location size
