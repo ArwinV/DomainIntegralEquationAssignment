@@ -37,7 +37,7 @@ show_plane(np.real(epsilon), step_size,'','epsilon')
 wavelength = speed_of_light/frequency #meters
 
 #Store necessary variables into dictionary for E-field computation
-farfield_samples = 0
+farfield_samples = 30
 simparams = {
     'simulation_size': simulation_size,
     'step_size': step_size,

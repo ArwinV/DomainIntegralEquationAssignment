@@ -32,7 +32,7 @@ locations, location_sizes, epsilon = grid_to_dynamic(epsilon_circle, step_size, 
 
 # Convert back to test
 farfield_samples = 0
-epsilon_grid = dynamic_to_grid(locations, epsilon, location_sizes, plane_size, step_size, farfield_samples)
+epsilon_grid = dynamic_to_grid(locations, epsilon, location_sizes, plane_size, step_size)
 show_plane(np.real(epsilon_grid), step_size)
 
 # Plot location points on plane
@@ -50,7 +50,7 @@ E_0 = np.sqrt(mu_0/epsilon_0) # Amplitude of incident wave
 E_incident = create_planewave_dynamic(locations, E_0, wavelength, input_angle, plane_size, step_size)
 
 # Convert to grid again
-E_incident_grid = dynamic_to_grid(locations, E_incident, location_sizes, plane_size, step_size, farfield_samples)
+E_incident_grid = dynamic_to_grid(locations, E_incident, location_sizes, plane_size, step_size)
 show_plane(np.real(E_incident_grid), step_size)
 
 # Plot locations of static grid
