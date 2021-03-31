@@ -25,6 +25,8 @@ def domain_integral_equation(simparams):
         # array containing number of evaluation points in x,y-directions
     farfield_samples = simparams['farfield_samples']
         #Amount of farfield samples present
+    
+    # Check whether static or dynamic grid is requested
     if 'dynamic_sample_distance' in simparams:
         dynamic_sample_distance = simparams['dynamic_sample_distance']
         max_size = simparams['max_size']
@@ -32,18 +34,19 @@ def domain_integral_equation(simparams):
     else:
         dynamic_sample_distance = False
     
-    # Prepare inputs for dynamic sampling distances
     if dynamic_sample_distance:
+        # Prepare inputs for dynamic sampling distances
         locations, location_sizes, permittivity = grid_to_dynamic(permittivity, step_size, max_size, size_limits)
     else:
+        # Create similar input arrays in case of a static grid
         locations = np.array(list(np.ndindex(simulation_size[0],simulation_size[1])))*step_size+0.5
-        location_sizes = np.ones(np.shape(locations)[0])
+        location_sizes = np.ones(np.shape(locations)[0]) #All samples are equal in size
         permittivity = np.matrix.flatten(permittivity)
     
     # Prepare farfield samples if they are requested
     if farfield_samples != 0:
         # Add and calculate values farfield
-        ff_distance = 200 #Farfield calculated at this distance from cylinder
+        ff_distance = 10*wavelength #Farfield calculated at this distance from cylinder
         ff_angle = np.linspace(0, 2*np.pi, farfield_samples, endpoint=False) #Starting angle in radians 45 degrees from incident
         # Locations of the farfield samples
         loc_ff = np.array([np.cos(ff_angle), np.sin(ff_angle)]).T*ff_distance
@@ -54,17 +57,17 @@ def domain_integral_equation(simparams):
         permittivity = np.append(permittivity, np.ones(farfield_samples)) #Farfield samples are in background medium, which is vacuum so permittivity is 1
     
     # Calculate incident wave on locations
-    E_0 = np.sqrt(mu_0/epsilon_0) # Amplitude of incident wave
+    E_0 = np.sqrt(mu_0/epsilon_0) #Amplitude of incident wave in background medium
     E_incident = create_planewave_dynamic(locations, E_0, wavelength, input_angle, simulation_size, step_size)
 
-    # Calculate scattering
+    # Calculate scattered E-field
     E = martin98(locations, E_incident, permittivity, location_sizes, wavelength, step_size)
     
     # Extract farfield samples
     if farfield_samples != 0:
-        E_ff = E[-farfield_samples-1:]
-        E = E[:-farfield_samples-1]
-        E_ff = E_ff/E_0*ff_distance #Cancelling the 1/r dependence
+        E_ff = E[-farfield_samples:]
+        E = E[:-farfield_samples]
+        E_ff = E_ff/E_0*ff_distance #Cancelling the 1/r dependence and normalizing over E_0
     else:
         E_ff = []
 
