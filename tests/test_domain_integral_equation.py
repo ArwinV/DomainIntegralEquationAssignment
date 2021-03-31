@@ -13,20 +13,20 @@ Output array E_field and field visualization plot
 """
 import numpy as np
 from scipy.constants import speed_of_light
-from helpers.create_testobject import plane_with_circle, plane_with_guide
+from helpers.create_testobject import plane_with_circle
 from helpers.visualize import show_plane, show_plane_ff
 from domain_integral_equation import domain_integral_equation
 
 # Setup simulation
-simulation_size = (72,72) #number of samples in x- and y-direction, respectively
-step_size = 5  #meters
+simulation_size = (100,100) #number of samples in x- and y-direction, respectively
+step_size = 5 #meters
 
 # Define input wave properties
 frequency = 1e6 #Hz
 input_angle = 45*np.pi/180 #radians
 
 #Define number of farfield samples desired, default 0
-farfield_samples = 120
+farfield_samples = 100
 
 # Define circle in middle of grid as test object
 circle_diameter = simulation_size[0]*step_size/10 #meters
