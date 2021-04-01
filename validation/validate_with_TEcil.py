@@ -14,7 +14,6 @@ from helpers.calculate_error import energybased_error
 from validation.TEcil import Analytical_2D_TE
 from timeit import default_timer as timer
 from helpers.dynamic_grid import grid_to_dynamic, dynamic_to_grid
-from martin98 import dynamic_shaping
 
 # Create epsilon plane
 simulation_size = (52,52)
@@ -27,7 +26,7 @@ circle_permittivity = 4.7 #relative (glass)
 epsilon_circle = plane_with_circle(simulation_size, step_size, circle_diameter, circle_permittivity)
 
 # Show plane
-show_plane(epsilon_circle, step_size, title="Plane on which the field is incident",plottype='epsilon')
+show_plane(np.real(epsilon_circle), step_size, title="Plane on which the field is incident",plottype='epsilon')
 
 # Define input wave properties
 frequency = 1e6
@@ -48,61 +47,36 @@ simparams = {
 
 # Compute E-field using domain_integral_equation
 start_algorithm = timer()
-E_field = domain_integral_equation(simparams).T
+E_field, E_ff = domain_integral_equation(simparams)
 end_algorithm = timer()
-print("Solution found with algorithm in {} seconds".format(end_algorithm-start_algorithm))
+print("Solution found with static algorithm in {} seconds".format(end_algorithm-start_algorithm))
 
+E_field = E_field.T
 # Show the calculated E field
-show_plane(np.absolute(E_field), step_size, title="E field calculated with algorithm",plottype='fieldnorm')
+show_plane(np.absolute(E_field), step_size, title="E field calculated with static algorithm",plottype='fieldnorm')
 
 #DYNAMIC GRID
-# Define dynamic grid properties
-#Calculate farfield distance
-size_circle = np.pi*0.5*circle_diameter #Approximated size of cylinder working as transmitting area, is the circumference of the cylinder
-ff_begin = 2*size_circle**2/wavelength #Distance farfield out of grip
-ff_distance = 200 #Farfield calculated at this distance from cylinder
+# Store necessary variables into dictionary for E-field computation
+size_limits = [0, 2*circle_diameter, 4*circle_diameter]
+simparams = {
+    'simulation_size': simulation_size,
+    'step_size': step_size,
+    'wavelength': wavelength,
+    'input_angle': input_angle,
+    'relative_permittivity': epsilon_circle,
+    'dynamic_sample_distance': True,
+    'size_limits': size_limits,
+    }
 
-max_size = 4
-size_limits = [0, max_size/2*circle_diameter, max_size*circle_diameter]
-locations, location_sizes, epsilon = grid_to_dynamic(epsilon_circle, step_size, size_limits)
+# Compute E-field using domain_integral_equation
+start_algorithm = timer()
+E_grid, E_ff = domain_integral_equation(simparams)
+end_algorithm = timer()
+print("Solution found with dynamic algorithm in {} seconds".format(end_algorithm-start_algorithm))
 
-#Add and calculate values farfield
-loc_ff = []
-
-if (farfield_samples != 0):
-    ff_angle = np.linspace(0, np.pi*2-2*np.pi/farfield_samples, farfield_samples)  #Starting angle in radians 45 degrees from incident
-    for k in range(farfield_samples):
-        # y_ff = np.sin(ff_angle)*r_ff
-        # x_ff = np.cos(ff_angle)*r_ff
-        loc_ff = [np.cos(ff_angle)*ff_distance,np.sin(ff_angle)*ff_distance]
-        # loc_ff[1] = np.sin(ff_angle)*r_ff
-else:
-    ff_angle = 0
-
-loc_ff = np.transpose(np.reshape(loc_ff,(2,farfield_samples)))
-loc_ff = loc_ff+(simulation_size[0]/2*step_size)
-
-# Add ff locations COMMENTED BECAUSE THIS ALSO HAPPENS IN DYNAMIC_SHAPING
-#locations = np.append(locations,loc_ff,axis=0)
-# Add their size and permittivity
-#location_sizes = np.append(location_sizes, np.ones(farfield_samples))
-#epsilon = np.append(epsilon, np.ones(farfield_samples))
-
-simparams['relative_permittivity'] = epsilon
-simparams['locations'] = locations
-simparams['location_sizes'] = location_sizes
-simparams['farfield_samples'] = farfield_samples
-
-start_dynamic = timer()
-E_grid,E_ff = dynamic_shaping(simparams)
-E_ff = E_ff*ff_distance #Employing the 1/r dependence
-end_dynamic = timer()
-print("Solution found with dynamic algorithm in {} seconds".format(end_dynamic-start_dynamic))
-
+E_grid = E_grid.T
 # Show the calculated E field
-show_plane(np.absolute(E_grid), step_size, title="E field calculated with dynamic algorithm")
-if farfield_samples != 0:
-    show_plane_ff(np.absolute(E_ff), loc_ff, ff_angle, ff_distance, title="Locations farfield of algorithm solution")
+show_plane(np.absolute(E_grid), step_size, title="E field calculated with dynamic algorithm",plottype='fieldnorm')
 
 #REFERENCE STATIC GRID
 # TEcil expects different simparams, so create new dictionary
@@ -134,6 +108,7 @@ show_plane(np.absolute(E_fieldval), step_size, title="E field of analytical solu
 
 #REFERENCE DYNAMIC GRID
 # TEcil expects different simparams, so create new dictionary
+locations, location_sizes, permittivity = grid_to_dynamic(epsilon_circle, step_size, size_limits)
 xpoints = locations[:,0] - simulation_size[0]*step_size/2
 ypoints = locations[:,1] - simulation_size[1]*step_size/2
 simparams = {
@@ -154,7 +129,7 @@ print("Analytical solution found in {} seconds".format(end_analytical-start_anal
 
 # Show the validation E field
 #locations_val = locations-[simulation_size[0]*step_size/2, simulation_size[1]*step_size/2]
-E_fieldval_grid = dynamic_to_grid(locations,E_fieldval_dyn,location_sizes,simulation_size,step_size,0)
+E_fieldval_grid = dynamic_to_grid(locations,E_fieldval_dyn,location_sizes,simulation_size,step_size)
 show_plane(np.absolute(E_fieldval_grid), step_size, title="E field of analytical solution on dynamic grid")
 
 #ERROR CALCULATION
@@ -163,7 +138,7 @@ E_difference = np.abs(E_fieldval) - np.abs(E_field)
 # Get the error between analytical and algorithm in percentage
 E_error = np.abs(E_difference)/np.abs(E_fieldval) * 100
 
-E_error_abs, E_error_norm = energybased_error(E_fieldval,E_field)
+E_error_abs = energybased_error(E_fieldval,E_field)
 
 # Plot the error
 show_plane(E_error, step_size, title="Error between analytical and static algorithm")
@@ -173,7 +148,7 @@ E_difference_grid = np.abs(E_fieldval_grid) - np.abs(E_grid)
 # # Get the error between analytical and algorithm in percentage
 E_griderror = np.abs(E_difference_grid)/np.abs(E_fieldval_grid) * 100
 
-E_griderror_abs, E_griderror_norm = energybased_error(E_fieldval_grid,E_grid)
+E_griderror_abs = energybased_error(E_fieldval_grid,E_grid)
 
 # # Plot the error
 show_plane(E_griderror, step_size, title="Error between analytical and dynamic algorithm")
