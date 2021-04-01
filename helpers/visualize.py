@@ -36,7 +36,7 @@ def show_plane(plane, grid_distance,title="",plottype=''):
     plt.grid(b=True)
     cbar = plt.colorbar()
     if plottype == 'fieldnorm':
-        plt.clim(0,750)
+        plt.clim(0,500)
         cbar.set_label('E-field magnitude [V/m]', rotation=270, labelpad=10)
     elif plottype == 'field':
         cbar.set_label('E-field magnitude [V/m]', rotation=270, labelpad=10)
@@ -63,15 +63,15 @@ def show_plane_ff(E_ff, loc_ff, ff_angle, ff_distance, title=""):
     
     # Create a new figure and show the graph with farfield samples
     
-    fig = plt.figure()
-    x = loc_ff[:,0]
-    y = loc_ff[:,1]
-    plt.scatter(x,y, cmap  = 'b')
-    plt.xlabel("X [m]")
-    plt.ylabel("Y [m]")
-    plt.gca().set_aspect("equal")
-    plt.title(title)
-    plt.show()
+    # fig = plt.figure()
+    # x = loc_ff[:,0]
+    # y = loc_ff[:,1]
+    # plt.scatter(x,y, cmap  = 'b')
+    # plt.xlabel("X [m]")
+    # plt.ylabel("Y [m]")
+    # plt.gca().set_aspect("equal")
+    # plt.title(title)
+    # plt.show()
     
     plt.plot(ff_angle,E_ff)
     plt.scatter(ff_angle,E_ff,color='c')
