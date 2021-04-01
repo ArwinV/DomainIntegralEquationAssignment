@@ -41,7 +41,7 @@ def show_plane(plane, grid_distance,title="",plottype=''):
     elif plottype == 'field':
         cbar.set_label('E-field magnitude [V/m]', rotation=270, labelpad=10)
     elif plottype == 'epsilon':
-        cbar.set_label('Relative permittivity $\epsilon$', rotation=270, labelpad=12)
+        cbar.set_label('Relative permittivity $\epsilon_r$', rotation=270, labelpad=12)
     
 def show_plane_ff(E_ff, loc_ff, ff_angle, ff_distance, title=""):
     """
