@@ -7,7 +7,7 @@ Created on Mon Feb 15 14:10:17 2021
 """
 import numpy as np
 from scipy.constants import epsilon_0, mu_0
-from helpers.create_incident_wave import create_planewave_dynamic
+from helpers.create_incident_wave import create_planewave
 from martin98 import martin98
 from helpers.dynamic_grid import dynamic_to_grid, grid_to_dynamic
 
@@ -53,7 +53,7 @@ def domain_integral_equation(simparams,farfield_samples=0):
     
     # Calculate incident wave on locations
     E_0 = np.sqrt(mu_0/epsilon_0) #Amplitude of incident wave in background medium
-    E_incident = create_planewave_dynamic(locations, E_0, wavelength, input_angle, simulation_size, step_size)
+    E_incident = create_planewave(locations, E_0, wavelength, input_angle, simulation_size, step_size)
 
     # Calculate scattering
     E = martin98(locations, E_incident, permittivity, location_sizes, wavelength, step_size)

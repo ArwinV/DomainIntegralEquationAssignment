@@ -12,7 +12,7 @@ from scipy.spatial.distance import pdist, squareform
 from helpers.dynamic_grid import grid_to_dynamic, dynamic_to_grid
 from helpers.visualize import show_plane,show_plane_ff
 from scipy.constants import epsilon_0, mu_0, speed_of_light
-from helpers.create_incident_wave import create_planewave_dynamic
+from helpers.create_incident_wave import create_planewave
 
 def martin98(locations, E_incident, permittivity, location_sizes, wavelength, step_size):
     """
@@ -116,7 +116,7 @@ def dynamic_shaping(simparams, farfield_samples):
     
         # Calculate incident wave on locations
         E_0 = np.sqrt(mu_0/epsilon_0) # Amplitude of incident wave
-        E_incident = create_planewave_dynamic(locations, E_0, wavelength, input_angle, simulation_size, step_size)
+        E_incident = create_planewave(locations, E_0, wavelength, input_angle, simulation_size, step_size)
     
         # Convert to grid again
         E_incident_grid = dynamic_to_grid(locations, E_incident, location_sizes, plane_size, step_size,farfield_samples)
@@ -137,7 +137,7 @@ def dynamic_shaping(simparams, farfield_samples):
     
         # Calculate incident wave on locations
         E_0 = np.sqrt(mu_0/epsilon_0) # Amplitude of incident wave
-        E_incident = create_planewave_dynamic(locations, E_0, wavelength, input_angle, simulation_size, step_size)
+        E_incident = create_planewave(locations, E_0, wavelength, input_angle, simulation_size, step_size)
     
         # Convert to grid again
         E_incident_grid = dynamic_to_grid(locations, E_incident, location_sizes, plane_size, step_size,farfield_samples)

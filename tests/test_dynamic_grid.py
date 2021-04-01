@@ -9,7 +9,7 @@ Created on Wed Mar 17 09:16:52 2021
 from helpers.visualize import show_plane
 from helpers.create_testobject import plane_with_circle
 from helpers.dynamic_grid import grid_to_dynamic, dynamic_to_grid
-from helpers.create_incident_wave import create_planewave_dynamic
+from helpers.create_incident_wave import create_planewave
 import matplotlib.pyplot as plt
 from scipy.constants import epsilon_0, mu_0, speed_of_light
 import numpy as np
@@ -47,7 +47,7 @@ plt.ylabel("Y [m]")
 
 # Calculate incident wave on locations
 E_0 = np.sqrt(mu_0/epsilon_0) # Amplitude of incident wave
-E_incident = create_planewave_dynamic(locations, E_0, wavelength, input_angle, plane_size, step_size)
+E_incident = create_planewave(locations, E_0, wavelength, input_angle, plane_size, step_size)
 
 # Convert to grid again
 E_incident_grid = dynamic_to_grid(locations, E_incident, location_sizes, plane_size, step_size)

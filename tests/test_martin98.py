@@ -9,7 +9,6 @@ Created on Thu Mar 18 14:40:28 2021
 from helpers.visualize import show_plane, show_plane_ff
 from helpers.create_testobject import plane_with_circle
 from helpers.dynamic_grid import grid_to_dynamic
-from helpers.create_incident_wave import create_planewave_dynamic
 import matplotlib.pyplot as plt
 from scipy.constants import epsilon_0, mu_0, speed_of_light
 import numpy as np
