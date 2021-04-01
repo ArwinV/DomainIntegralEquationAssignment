@@ -33,11 +33,9 @@ def domain_integral_equation(simparams,farfield_samples=0):
     if dynamic_sample_distance:
         locations, location_sizes, permittivity = grid_to_dynamic(permittivity, step_size, size_limits)
     else:
-        size_limits = [0, 2*simulation_size[0]*step_size, 2*simulation_size[0]*step_size]
-        #locations = np.array(list(np.ndindex(simulation_size[0],simulation_size[1])))*step_size+0.5
-        locations, location_sizes, permittivity = grid_to_dynamic(permittivity, step_size, size_limits)
-        # location_sizes = np.ones(np.shape(locations)[0])
-        # permittivity = np.matrix.flatten(permittivity)
+        locations = np.array(list(np.ndindex(simulation_size[0],simulation_size[1])))*step_size
+        location_sizes = np.ones(np.shape(locations)[0])
+        permittivity = np.matrix.flatten(permittivity)
     
     # Prepare farfield samples if they are requested
     if farfield_samples != 0:
