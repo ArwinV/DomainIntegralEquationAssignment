@@ -17,11 +17,11 @@ from helpers.dynamic_grid import grid_to_dynamic, dynamic_to_grid
 
 # Create epsilon plane
 simulation_size = (52,52)
-total_size = 500;
+total_size = 150;
 step_size = total_size/simulation_size[0]  #meters
 
 # Circle in middle
-circle_diameter = total_size/10 #meters
+circle_diameter = total_size/3 #meters
 circle_permittivity = 4.7 #relative (glass)
 epsilon_circle = plane_with_circle(simulation_size, step_size, circle_diameter, circle_permittivity)
 
@@ -138,7 +138,7 @@ E_difference = np.abs(E_fieldval) - np.abs(E_field)
 # Get the error between analytical and algorithm in percentage
 E_error = np.abs(E_difference)/np.abs(E_fieldval) * 100
 
-E_error_abs = energybased_error(E_fieldval,E_field)
+E_error_norm = energybased_error(E_fieldval,E_field)
 
 # Plot the error
 show_plane(E_error, step_size, title="Error between analytical and static algorithm")
@@ -148,7 +148,7 @@ E_difference_grid = np.abs(E_fieldval_grid) - np.abs(E_grid)
 # # Get the error between analytical and algorithm in percentage
 E_griderror = np.abs(E_difference_grid)/np.abs(E_fieldval_grid) * 100
 
-E_griderror_abs = energybased_error(E_fieldval_grid,E_grid)
+E_griderror_norm = energybased_error(E_fieldval_grid,E_grid)
 
 # # Plot the error
 show_plane(E_griderror, step_size, title="Error between analytical and dynamic algorithm")

@@ -45,7 +45,7 @@ def validation_cylinder(step_size,simulation_size,circle_diameter,dynamic=False,
         'wavelength': wavelength,
         'input_angle': input_angle,
         'relative_permittivity': epsilon,
-        'dynamic_sample_distance': True,
+        'dynamic_sample_distance': dynamic,
         'max_size': max_size,
         'size_limits': [0, max_size/2*circle_diameter, max_size*circle_diameter],
     }
