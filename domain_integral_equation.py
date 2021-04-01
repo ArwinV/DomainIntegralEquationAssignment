@@ -25,7 +25,6 @@ def domain_integral_equation(simparams,farfield_samples=0):
         # array containing number of evaluation points in x,y-directions
     if 'dynamic_sample_distance' in simparams:
         dynamic_sample_distance = simparams['dynamic_sample_distance']
-        max_size = simparams['max_size']
         size_limits = simparams['size_limits']
     else:
         dynamic_sample_distance = False

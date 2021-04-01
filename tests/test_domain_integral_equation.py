@@ -24,7 +24,7 @@ step_size = 5 #meters
 
 # Define input wave properties
 frequency = 1e6 #Hz
-input_angle = 45*np.pi/180 #radians
+input_angle = 0*np.pi/180 #radians
 
 #Define number of farfield samples desired, default 0
 farfield_samples = 0
@@ -42,7 +42,6 @@ wavelength = speed_of_light/frequency #meters
 wvl = 3e8/frequency #meters, rounded wavelength
 
 #Store necessary variables into dictionary for E-field computation
-max_size = 4 #Maximum sample size
 simparams = {
     'simulation_size': simulation_size,
     'step_size': step_size,
@@ -50,7 +49,6 @@ simparams = {
     'input_angle': input_angle,
     'relative_permittivity': epsilon,
     'dynamic_sample_distance': True,
-    'max_size': max_size,
     'size_limits': [0, max_size/2*circle_diameter, max_size*circle_diameter],
     }
 
