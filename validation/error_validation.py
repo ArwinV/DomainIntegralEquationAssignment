@@ -14,10 +14,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Variables to be adapted by user
-sample = [*range(40,73,4)] #Minimum size, maximum size+1, interval
+sample = [*range(40,181,4)] #Minimum size, maximum size+1, interval
 totalsize = 500 #meters
 circle_diameter = totalsize/10 #meters
-dynamic = (True, False) #One or both can be chosen
+dynamic = (True)#, False) #One or both can be chosen
 
 # Calculating step size for corresponding simulation size
 step = np.divide(totalsize,sample) #Samples equally divided over total size
@@ -34,7 +34,7 @@ errormax = [0]*np.size(step)
 
 for k in range(np.size(dynamic)):
     # Loop over each given grid type
-    grid = dynamic[k]
+    grid = dynamic
     for i in range(np.size(step)):
         # Loop over each given simulation size and corresponding step size
         simulation_size = simsize[i]

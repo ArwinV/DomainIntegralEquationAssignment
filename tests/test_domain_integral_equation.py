@@ -8,8 +8,9 @@ Created on Mon Feb 15 15:37:58 2021
 This script can be used to generate results via the Domain Integral 
 Equation algorithm. All inputs to the function can be changed as desired.
 As an example, a relative permittivity matrix is calculated to define a 
-cilinder test object. 
-Output array E_field and field visualization plot
+cylinder test object. 
+Output: array E_field and field visualization plot
+Optional outputs related to far-field: array E_ff, far field plot
 """
 import numpy as np
 from scipy.constants import speed_of_light
@@ -26,22 +27,22 @@ frequency = 1e6 #Hz
 input_angle = 45*np.pi/180 #radians
 
 #Define number of farfield samples desired, default 0
-farfield_samples = 100
+farfield_samples = 0
 
 # Define circle in middle of grid as test object
 circle_diameter = simulation_size[0]*step_size/10 #meters
-circle_permittivity = 4.7+1j #relative, can be real or complex
+circle_permittivity = 4.7 #relative, can be real or complex
 epsilon = plane_with_circle(simulation_size, step_size, circle_diameter, circle_permittivity)
 
 # Show plane
-show_plane(np.real(epsilon), step_size,'','epsilon')
+show_plane(np.real(epsilon), step_size,'Simulation grid setup','epsilon')
 
 #Calculation of wavelength from user defined frequency
 wavelength = speed_of_light/frequency #meters
 wvl = 3e8/frequency #meters, rounded wavelength
 
 #Store necessary variables into dictionary for E-field computation
-max_size = 4
+max_size = 4 #Maximum sample size
 simparams = {
     'simulation_size': simulation_size,
     'step_size': step_size,

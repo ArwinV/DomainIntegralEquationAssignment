@@ -4,14 +4,7 @@ Created on Fri Feb 26 14:47:14 2021
 
 @author: Wendy
 
-Function that is called by error_validation.py and compares algorithmic solution
-to analytical solution of scattered field from a cylinder.
-Frequency and incident angle of plane wave are predefined.
-No validation is performed for far-field samples.
 
-Inputs: simulation settings defined by user.
-Outputs: l2-error norm, computation time, maximum error (all integers)
-for given settings.
 """
 
 import numpy as np
@@ -24,6 +17,16 @@ from timeit import default_timer as timer
 from helpers.dynamic_grid import grid_to_dynamic, dynamic_to_grid
 
 def validation_cylinder(step_size,simulation_size,circle_diameter,dynamic=False,circle_permittivity=4.7):
+    """"
+    Function that is called by error_validation.py and compares algorithmic solution
+    to analytical solution of scattered field from a cylinder.
+    Frequency and incident angle of plane wave are predefined.
+    No validation is performed for far-field samples.
+
+    Inputs: simulation settings defined by user.
+    Returns: l2-error norm, computation time, maximum error (all integers)
+    for given settings.
+    """
     
     # Generate relative permittivity matrix for desired cylinder grid
     epsilon = plane_with_circle(simulation_size, step_size, circle_diameter, circle_permittivity)
@@ -35,7 +38,7 @@ def validation_cylinder(step_size,simulation_size,circle_diameter,dynamic=False,
     input_angle = theta_i*np.pi/180 #Convert to radians
     
     # Store necessary variables into dictionary for E-field computation
-    max_size = 3 #Maximum sample size
+    max_size = 4 #Maximum sample size
     simparams = {
         'simulation_size': simulation_size,
         'step_size': step_size,
