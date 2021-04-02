@@ -174,5 +174,10 @@ def dynamic_to_grid(locations, val_dynamic, location_sizes, plane_size, grid_dis
         # Add value to array
         for x in np.linspace(l[0]-(l_s)/2, l[0]+(l_s)/2, int(l_s), endpoint=False):
             for y in np.linspace(l[1]-(l_s)/2, l[1]+(l_s)/2, int(l_s), endpoint=False):
-                val_grid[int(round(x))][int(round(y))] = val_dynamic[l_index]
+                val_grid[int(normal_round(x))][int(normal_round(y))] = val_dynamic[l_index]
     return val_grid
+
+def normal_round(n):
+    if n - math.floor(n) < 0.5:
+        return math.floor(n)
+    return math.ceil(n)
