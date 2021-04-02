@@ -24,10 +24,10 @@ step_size = 5 #meters
 
 # Define input wave properties
 frequency = 1e6 #Hz
-input_angle = 0*np.pi/180 #radians
+input_angle = 90*np.pi/180 #radians
 
 #Define number of farfield samples desired, default 0
-farfield_samples = 0
+farfield_samples = 120
 
 # Define circle in middle of grid as test object
 circle_diameter = simulation_size[0]*step_size/10 #meters
@@ -49,7 +49,7 @@ simparams = {
     'input_angle': input_angle,
     'relative_permittivity': epsilon,
     'dynamic_sample_distance': True,
-    'size_limits': [0, max_size/2*circle_diameter, max_size*circle_diameter],
+    'size_limits': [0, 2*circle_diameter, 4*circle_diameter],
     }
 
 #Compute E-field using domain_integral_equation

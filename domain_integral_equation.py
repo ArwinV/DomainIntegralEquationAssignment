@@ -68,4 +68,4 @@ def domain_integral_equation(simparams,farfield_samples=0):
     # Convert result to grid again
     E_grid = np.conjugate(dynamic_to_grid(locations[:len(E)], E, location_sizes[:len(E)], simulation_size, step_size))
 
-    return E_grid, E_ff
+    return E_grid.T, E_ff
