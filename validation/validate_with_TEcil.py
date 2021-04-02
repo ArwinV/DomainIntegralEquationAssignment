@@ -33,7 +33,7 @@ frequency = 1e6
 wavelength = speed_of_light/frequency
 theta_i = 45;
 input_angle = theta_i*np.pi/180
-farfield_samples = 120
+farfield_samples = 0
 
 #STATIC GRID
 # Store necessary variables into dictionary for E-field computation
@@ -57,7 +57,7 @@ show_plane(np.absolute(E_field), step_size, title="E field calculated with stati
 
 #DYNAMIC GRID
 # Store necessary variables into dictionary for E-field computation
-size_limits = [0, 2*circle_diameter, 4*circle_diameter]
+size_limits = [0, 10*circle_diameter, 10*circle_diameter]
 simparams = {
     'simulation_size': simulation_size,
     'step_size': step_size,
