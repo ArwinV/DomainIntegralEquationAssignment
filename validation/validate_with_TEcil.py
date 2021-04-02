@@ -100,7 +100,7 @@ end_analytical = timer()
 print("Analytical solution found in {} seconds".format(end_analytical-start_analytical))
 
 # Show the validation E field
-E_fieldval = np.reshape(np.conjugate(E_fieldval), simulation_size, order='C')
+E_fieldval = np.reshape(E_fieldval, simulation_size, order='C')
 show_plane(np.absolute(E_fieldval), step_size, title="E field of analytical solution on static grid")
 
 #REFERENCE DYNAMIC GRID

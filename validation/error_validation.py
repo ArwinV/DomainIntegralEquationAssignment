@@ -14,10 +14,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Variables to be adapted by user
-sample = [*range(40,181,4)] #Minimum size, maximum size+1, interval
+sample = [*range(40,151,4)] #Minimum size, maximum size+1, interval
 totalsize = 500 #meters
 circle_diameter = totalsize/10 #meters
-dynamic = (True)#, False) #One or both can be chosen
+dynamic = (False)#, True) #One or both can be chosen
 
 # Calculating step size for corresponding simulation size
 step = np.divide(totalsize,sample) #Samples equally divided over total size
@@ -55,7 +55,7 @@ for k in range(np.size(dynamic)):
     # plt.plot(relstep,errormax) #Turn on if maximum error is desired
     # plt.scatter(relstep,errormax, color='gold', label='l$\infty$-norm')
     plt.grid(True, which='both')
-    plt.title('Error progression for decreasing step size dynamic grid, d/$\lambda$=1/{}'.format(int(3e8/circle_diameter/1e6)))
+    plt.title('Error progression for decreasing step size, d/$\lambda$=1/{}'.format(int(3e8/circle_diameter/1e6)))
     plt.xscale('log')
     plt.yscale('log')
     plt.xlabel('Step size / d')

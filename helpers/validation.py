@@ -78,12 +78,9 @@ def validation_cylinder(step_size,simulation_size,circle_diameter,dynamic=False,
         E_fieldval = dynamic_to_grid(locations,E_fieldval,location_sizes,simulation_size,step_size)
    
     else: 
-        # Create static validation grid
-        xmin = -simulation_size[0]*step_size/2
-        xmax = simulation_size[0]*step_size/2
-        ymin = -simulation_size[1]*step_size/2
-        ymax = simulation_size[1]*step_size/2
-        xpoints,ypoints = np.meshgrid(np.linspace(xmin, xmax, simulation_size[0]), np.linspace(ymin, ymax, simulation_size[1]))
+        locations = (np.array(list(np.ndindex(simulation_size[0],simulation_size[1])))+0.5)*step_size
+        xpoints = locations[:,0] - simulation_size[0]*step_size/2
+        ypoints = locations[:,1] - simulation_size[1]*step_size/2
         simparams = {
             'frequency': frequency,
             'radius': circle_diameter/2,
@@ -96,6 +93,7 @@ def validation_cylinder(step_size,simulation_size,circle_diameter,dynamic=False,
         
         # Compute E-field using TEcil
         _, _, E_fieldval, E_inval = Analytical_2D_TE(simparams)
+        E_fieldval = np.reshape(E_fieldval, simulation_size, order='C')
         
     
     # Calculate difference in magnitude between implementation and validation
