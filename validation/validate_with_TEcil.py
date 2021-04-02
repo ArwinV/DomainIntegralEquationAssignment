@@ -57,7 +57,7 @@ show_plane(np.absolute(E_field), step_size, title="E field calculated with stati
 
 #DYNAMIC GRID
 # Store necessary variables into dictionary for E-field computation
-size_limits = [0, 10*circle_diameter, 10*circle_diameter]
+size_limits = [0, circle_diameter, 2*circle_diameter]
 simparams = {
     'simulation_size': simulation_size,
     'step_size': step_size,
@@ -80,13 +80,9 @@ show_plane(np.absolute(E_grid), step_size, title="E field calculated with dynami
 
 #REFERENCE STATIC GRID
 # TEcil expects different simparams, so create new dictionary
-xmin = -simulation_size[0]*step_size/2
-xmax = simulation_size[0]*step_size/2
-ymin = -simulation_size[1]*step_size/2
-ymax = simulation_size[1]*step_size/2
-xpoints,ypoints = np.meshgrid(np.linspace(xmin, xmax, simulation_size[0])+0.5*step_size, np.linspace(ymin, ymax, simulation_size[1])+0.5*step_size)
-# xpoints = locations[:,0] - simulation_size[0]*step_size/2
-# ypoints = locations[:,1] - simulation_size[1]*step_size/2
+locations = (np.array(list(np.ndindex(simulation_size[0],simulation_size[1])))+0.5)*step_size
+xpoints = locations[:,0] - simulation_size[0]*step_size/2
+ypoints = locations[:,1] - simulation_size[1]*step_size/2
 simparams = {
     'frequency': frequency,
     'radius': circle_diameter/2,
@@ -104,6 +100,7 @@ end_analytical = timer()
 print("Analytical solution found in {} seconds".format(end_analytical-start_analytical))
 
 # Show the validation E field
+E_fieldval = np.reshape(np.conjugate(E_fieldval), simulation_size, order='C')
 show_plane(np.absolute(E_fieldval), step_size, title="E field of analytical solution on static grid")
 
 #REFERENCE DYNAMIC GRID
