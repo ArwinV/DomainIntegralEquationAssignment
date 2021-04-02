@@ -11,7 +11,7 @@ from helpers.create_incident_wave import create_planewave
 from martin98 import martin98
 from helpers.dynamic_grid import dynamic_to_grid, grid_to_dynamic
 
-def domain_integral_equation(simparams,farfield_samples=0):
+def domain_integral_equation(simparams):
     #Initialization: read parameters from dictionary
     wavelength = simparams['wavelength']
         # wavelength = wavelength of incident plane wave
@@ -28,6 +28,10 @@ def domain_integral_equation(simparams,farfield_samples=0):
         size_limits = simparams['size_limits']
     else:
         dynamic_sample_distance = False
+    if 'farfield_samples' in simparams:
+        farfield_samples = simparams['farfield_samples']
+    else:
+        farfield_samples = 0
     
     # Prepare inputs for dynamic sampling distances
     if dynamic_sample_distance:

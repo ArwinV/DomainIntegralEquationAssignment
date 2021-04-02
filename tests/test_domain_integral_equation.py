@@ -50,10 +50,11 @@ simparams = {
     'relative_permittivity': epsilon,
     'dynamic_sample_distance': True,
     'size_limits': [0, 2*circle_diameter, 4*circle_diameter],
+    'farfield_samples': farfield_samples
     }
 
 #Compute E-field using domain_integral_equation
-E_field, E_ff = domain_integral_equation(simparams,farfield_samples)
+E_field, E_ff = domain_integral_equation(simparams)
 
 # Show the calculated E field
 show_plane(np.absolute(E_field), step_size, title="E field calculated with algorithm for d/$\lambda$ = 1/{}".format(int(wvl/circle_diameter)),plottype='field')
