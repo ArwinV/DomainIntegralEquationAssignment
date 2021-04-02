@@ -70,6 +70,9 @@ def domain_integral_equation(simparams):
         E_ff = []
 
     # Convert result to grid again
-    E_grid = np.conjugate(dynamic_to_grid(locations[:len(E)], E, location_sizes[:len(E)], simulation_size, step_size))
+    if dynamic_sample_distance:
+        E_grid = np.conjugate(dynamic_to_grid(locations[:len(E)], E, location_sizes[:len(E)], simulation_size, step_size))
+    else: 
+        E_grid = np.reshape(np.conjugate(E), simulation_size, order='C')
 
     return E_grid.T, E_ff
