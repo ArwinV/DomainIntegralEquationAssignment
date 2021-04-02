@@ -72,12 +72,10 @@ def show_plane_ff(E_ff, loc_ff, ff_angle, ff_distance, title=""):
     # plt.gca().set_aspect("equal")
     # plt.title(title)
     # plt.show()
-    
+    plt.figure()
     plt.plot(ff_angle,E_ff)
     plt.scatter(ff_angle,E_ff,color='c')
     plt.xlabel("Angle [rad]")
     plt.ylabel("Normalized E-field magnitude")
     plt.title("Normalized farfield values at %i m from cylinder" %ff_distance)
     plt.grid(b=True)
-    plt.show()
-
