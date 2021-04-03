@@ -56,28 +56,7 @@ def validation_cylinder(step_size,simulation_size,circle_diameter,dynamic=False,
     end_algorithm = timer()
     algorithm_time = end_algorithm - start_algorithm
     
-    # TEcil expects different simparams, so create new dictionary
-    # if dynamic:
-    #     # Make sure validation grid is also dynamic
-    #     locations, location_sizes, permittivity = grid_to_dynamic(epsilon, step_size,simparams['size_limits'])
-    #     xpoints = locations[:,0] - simulation_size[0]*step_size/2
-    #     ypoints = locations[:,1] - simulation_size[1]*step_size/2
-    #     simparams = {
-    #         'frequency': frequency,
-    #         'radius': circle_diameter/2,
-    #         'epsilon_r': circle_permittivity,
-    #         'incident_angle': input_angle,
-    #         'modes': 50, #used in jupyter notebook example
-    #         'evaluation_points_x': xpoints,
-    #         'evaluation_points_y': ypoints
-    #         }
-        
-    #     # Compute E-field using TEcil
-    #     _, _, E_fieldval, E_inval = Analytical_2D_TE(simparams)  
-    #     # Convert back to grid
-    #     E_fieldval = dynamic_to_grid(locations,E_fieldval,location_sizes,simulation_size,step_size)
-   
-    # else: 
+    # Change dictionary for validation
     locations = (np.array(list(np.ndindex(simulation_size[0],simulation_size[1])))+0.5)*step_size
     xpoints = locations[:,0] - simulation_size[0]*step_size/2
     ypoints = locations[:,1] - simulation_size[1]*step_size/2
@@ -91,10 +70,9 @@ def validation_cylinder(step_size,simulation_size,circle_diameter,dynamic=False,
         'evaluation_points_y': ypoints
         }
     
-    # Compute E-field using TEcil
+    # Compute analytical solution
     _, _, E_fieldval, E_inval = Analytical_2D_TE(simparams)
     E_fieldval = np.reshape(E_fieldval, simulation_size, order='C')
-    #
     
     # Calculate difference in magnitude between implementation and validation
     E_difference = np.abs(E_fieldval) - np.abs(E_field)
