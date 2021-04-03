@@ -31,7 +31,7 @@ show_plane(np.real(epsilon_circle), step_size, title="Plane on which the field i
 # Define input wave properties
 frequency = 1e6
 wavelength = speed_of_light/frequency
-theta_i = 45;
+theta_i = 0;
 input_angle = theta_i*np.pi/180
 farfield_samples = 0
 
@@ -51,7 +51,6 @@ E_field, E_ff = domain_integral_equation(simparams)
 end_algorithm = timer()
 print("Solution found with static algorithm in {} seconds".format(end_algorithm-start_algorithm))
 
-E_field = E_field.T
 # Show the calculated E field
 show_plane(np.absolute(E_field), step_size, title="E field calculated with static algorithm",plottype='fieldnorm')
 
@@ -74,7 +73,6 @@ E_grid, E_ff = domain_integral_equation(simparams)
 end_algorithm = timer()
 print("Solution found with dynamic algorithm in {} seconds".format(end_algorithm-start_algorithm))
 
-E_grid = E_grid.T
 # Show the calculated E field
 show_plane(np.absolute(E_grid), step_size, title="E field calculated with dynamic algorithm",plottype='fieldnorm')
 
@@ -101,6 +99,7 @@ print("Analytical solution found in {} seconds".format(end_analytical-start_anal
 
 # Show the validation E field
 E_fieldval = np.reshape(E_fieldval, simulation_size, order='C')
+E_fieldval = E_fieldval.T
 show_plane(np.absolute(E_fieldval), step_size, title="E field of analytical solution on static grid")
 
 #REFERENCE DYNAMIC GRID
@@ -127,6 +126,7 @@ print("Analytical solution found in {} seconds".format(end_analytical-start_anal
 # Show the validation E field
 #locations_val = locations-[simulation_size[0]*step_size/2, simulation_size[1]*step_size/2]
 E_fieldval_grid = dynamic_to_grid(locations,E_fieldval_dyn,location_sizes,simulation_size,step_size)
+E_fieldval_grid = E_fieldval_grid.T
 show_plane(np.absolute(E_fieldval_grid), step_size, title="E field of analytical solution on dynamic grid")
 
 #ERROR CALCULATION
