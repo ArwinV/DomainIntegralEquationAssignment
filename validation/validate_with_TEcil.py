@@ -33,7 +33,7 @@ show_plane(np.real(epsilon_circle), step_size, title="Plane on which the field i
 # Define input wave properties
 frequency = 1e6
 wavelength = speed_of_light/frequency
-theta_i = -45;
+theta_i = 45;
 input_angle = theta_i*np.pi/180
 farfield_samples = 120
 
@@ -119,7 +119,7 @@ if farfield_samples != 0 :
     E_fieldval_ff = E_fieldval_ff/E_0 #Normalizing over E_0
 
 # Show the validation E field
-E_fieldval = np.reshape(E_fieldval, simulation_size, order='C')
+E_fieldval = np.reshape(E_fieldval_dyn, simulation_size, order='C')
 E_fieldval = E_fieldval.T
 show_plane(np.absolute(E_fieldval), step_size, title="E field of analytical solution on static grid")
 
