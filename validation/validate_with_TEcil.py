@@ -17,6 +17,7 @@ from helpers.dynamic_grid import grid_to_dynamic, dynamic_to_grid
 import matplotlib.pyplot as plt
 from scipy.constants import epsilon_0, mu_0
 
+#INPUTS TO BE ADAPTED BY USER
 # Create epsilon plane
 simulation_size = (100,100) #number of samples in x- and y-direction, respectively
 total_size = 500; #size of grid, meters
