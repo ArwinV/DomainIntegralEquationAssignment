@@ -87,7 +87,7 @@ ypoints = locations[:,1] - simulation_size[1]*step_size/2 #Creates an array of y
 
 #Calculate farfield used for validation
 if farfield_samples != 0: 
-    ff_distance = 10*round(wavelength) #Farfield calculated at this distance from cylinder
+    ff_distance = 10*(wavelength) #Farfield calculated at this distance from cylinder
     ff_angle = np.linspace(0, 2*np.pi, farfield_samples, endpoint=False) #Angles at which farfield samples will be calculated 
     loc_ff = np.array([np.cos(ff_angle+np.pi/2), np.sin(ff_angle+np.pi/2)]).T*ff_distance #Locations of the farfield
     loc_ff = np.array([loc_ff[:,0]+simulation_size[0]/2*step_size, loc_ff[:,1]+simulation_size[0]/2*step_size]).T #Shift locations around center of simulation plane
